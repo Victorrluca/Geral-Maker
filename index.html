@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Controle Geral</title>
+    
+    <meta name="theme-color" content="#f0f4f8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Controle Geral">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+                        glass: 'rgba(255, 255, 255, 0.85)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'neumorph': '20px 20px 60px #d1d9e6, -20px -20px 60px #ffffff'
+                    },
+                    zIndex: { '100': '100', 'max': '9999' },
+                    animation: { 'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
+                }
+            }
+        }
+    </script>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0?dev",
+        "react-dom": "https://esm.sh/react-dom@18.2.0?dev",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?dev",
+        "react-is": "https://esm.sh/react-is@18.2.0?dev",
+        "prop-types": "https://esm.sh/prop-types@15.8.1?dev",
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "recharts": "https://esm.sh/recharts@2.12.0?external=react,react-dom,prop-types&dev",
+        "lucide-react": "https://esm.sh/lucide-react@0.330.0?external=react&dev",
+        "papaparse": "https://esm.sh/papaparse@5.4.1?dev",
+        "read-excel-file": "https://esm.sh/read-excel-file@5.6.1?dev"
+      }
+    }
+    </script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+      body { background-color: #f0f4f8; -webkit-tap-highlight-color: transparent; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-fadeIn { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+      @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+      .animate-slideUp { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+      @keyframes scaleUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+      .animate-scaleUp { animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+      
+      @keyframes softPulse { 
+          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); border-color: #10b981; background-color: #ecfdf5; } 
+          50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); background-color: #d1fae5; }
+          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); border-color: #10b981; background-color: #ecfdf5; } 
+      }
+      .live-indicator { 
+          animation: softPulse 2s infinite; 
+          border: 2px solid #10b981 !important; 
+          transform: scale(1.02); 
+          z-index: 10; 
+          position: relative; 
+      }
+
+      .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+      .pt-safe { padding-top: env(safe-area-inset-top); }
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+    <div id="root">
+        <div style="height:100vh; display:flex; align-items:center; justify-content:center; color:#3b82f6; font-family:sans-serif;">
+            <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 16px;">📊</div>
+                <div class="animate-pulse font-medium text-slate-400">A carregar a aplicação...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useMemo, useRef } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { initializeApp } from 'firebase/app';
+        import { 
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+            onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, 
+            browserSessionPersistence, signInAnonymously
+        } from 'firebase/auth';
+        import { 
+            getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, 
+            deleteDoc, getDocs, addDoc, query, orderBy 
+        } from 'firebase/firestore';
+        import { 
+            PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, 
+            XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+        } from 'recharts';
+        import { 
+            Calendar, CheckCircle, AlertTriangle, XCircle, BarChart2, 
+            Settings, ChevronLeft, ChevronRight, Plus, Trash2, Save, School, 
+            AlertOctagon, Download, FileText, Check, CalendarOff, CalendarPlus, 
+            Bell, LogOut, User, Lock, Mail, Sparkles, X, ListFilter, Home, 
+            Users, Star, ClipboardCheck, TrendingUp, TrendingDown, Minus, Split, 
+            History, Copy, BrainCircuit, Notebook, StickyNote, Tag, Info, 
+            Upload, FileSpreadsheet, Filter, Search, PieChart as PieChartIcon, 
+            UserX, RefreshCw, Loader2, ShieldCheck, Trophy, Medal, Sun, Moon, 
+            Clock, Percent, LayoutGrid, List, Wand2, Eye, Share2, Users2, MoveUp, ShieldAlert, MessageSquare
+        } from 'lucide-react';
+        import Papa from 'papaparse';
+        import readXlsxFile from 'read-excel-file';
+
+        // --- INICIALIZAÇÃO FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_nF_f_CCGPYVXqNq8SHwMOgUeUiiF_bs",
+            authDomain: "cronograma-1881b.firebaseapp.com",
+            projectId: "cronograma-1881b",
+            storageBucket: "cronograma-1881b.firebasestorage.app",
+            messagingSenderId: "233763014359",
+            appId: "1:233763014359:web:ebc8c7f0f09bf6449fd292"
+        };
+
+        let app, auth, db;
+        let configError = null;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error("Erro Firebase:", error);
+            configError = "Erro na configuração do Firebase: " + error.message;
+        }
+
+        const GEMINI_API_KEY = "AIzaSyBpfNkTHd0i6lnAlYod1NIS6X7TkDInCq0"; 
+        const appId = 'cronograma-visitas-app-v1';
+
+        // --- CONSTANTES ---
+        const DAYS_OF_WEEK = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
+        const SLOTS = [
+          { id: 1, label: '08:00 - 09:00', period: 'Manhã', startHour: 8, endHour: 9 },
+          { id: 2, label: '09:00 - 13:00', period: 'Manhã/Tarde', startHour: 9, endHour: 13 },
+          { id: 3, label: '13:00 - 15:00', period: 'Tarde', startHour: 13, endHour: 15 },
+          { id: 4, label: '15:00 - 17:00', period: 'Tarde', startHour: 15, endHour: 17 }
+        ];
+        
+        const AUTO_CLASS_SLOTS = [
+            { id: 'm1', label: '1º Manhã', codeSlot: '1', period: 'M', startHour: 7, startMin: 0, endHour: 9, endMin: 10 },
+            { id: 'm2', label: '2º Manhã', codeSlot: '2', period: 'M', startHour: 9, startMin: 10, endHour: 12, endMin: 30 },
+            { id: 't1', label: '1º Tarde', codeSlot: '1', period: 'T', startHour: 12, startMin: 30, endHour: 15, endMin: 10 },
+            { id: 't2', label: '2º Tarde', codeSlot: '2', period: 'T', startHour: 15, startMin: 10, endHour: 18, endMin: 0 }
+        ];
+
+        const LEVEL_MAP = { '6': 'KIDS 1', '7': 'KIDS 2', '8': 'JUNIOR', '9': 'TEEN', '10': 'OBR', '11': 'INOVAÇÃO' };
+        const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const WEEK_DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+        const DEFAULT_SCHOOLS_LIST = ["Armando Cavazza", "CARLOS OSMARINHO DE LIMA - PROFº", "Dorival Faria", "ELIZABETH PARMINONDI ROMERO - PROFª", "ELVIRA LEFÈVRE SALLES NEMER - PROFª", "Estevan Placêncio", "Ezio Berzaghi", "GILBERTO FLORÊNCIO - PROF.", "JOÃO DE ALMEIDA LEMOS", "LUIZ DE OLIVEIRA ANDRADE - PE", "NALY BENEDICTA B. C. MANCINI - PROFª", "Raposo Tavares", "Taro Mizutori", "Yojiro Takaoka", "Jorge Augusto - Prof", "Eneias Raimundo da Silva - Prof", "Alfredo do Carmo - Prof", "Egidio Costa - Prof"];
+        const NOTE_CATEGORIES = [{ id: 'meeting', label: 'Reunião', color: 'bg-blue-100 text-blue-700' }, { id: 'instructor', label: 'Instrutores', color: 'bg-purple-100 text-purple-700' }, { id: 'routine', label: 'Rotina', color: 'bg-emerald-100 text-emerald-700' }, { id: 'general', label: 'Geral', color: 'bg-gray-100 text-gray-700' }];
+        const EVALUATION_CRITERIA = [{ id: 'control', label: 'Controle de Turma' }, { id: 'tech', label: 'Domínio Técnico' }, { id: 'motivation', label: 'Motivação / Engajamento' }, { id: 'comm', label: 'Comunicação com Aluno' }, { id: 'didactic', label: 'Didática Pedagógica' }, { id: 'cleanliness', label: 'Organização e Limpeza' }];
+
+        // --- FUNÇÕES AUXILIARES ---
+        const formatDateLocal = (date) => { if(!date) return ''; const y = date.getFullYear(); const m = String(date.getMonth() + 1).padStart(2, '0'); const d = String(date.getDate()).padStart(2, '0'); return `${y}-${m}-${d}`; };
+        const normalizeStr = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, ' ') : "";
+        const findSchoolColumn = (row) => { const keys = Object.keys(row); if (row.n_polo) return 'n_polo'; if (row.polo) return 'polo'; return keys.find(k => k.toLowerCase().includes('polo') || k.toLowerCase().includes('escola')); };
+        const detectShift = (turmaCode) => { if (!turmaCode) return 'Indefinido'; const code = String(turmaCode).toUpperCase(); if (/\d\s*M/.test(code)) return 'Manhã'; if (/\d\s*T/.test(code)) return 'Tarde'; return 'Indefinido'; };
+        const getStudentClass = (s) => s.n_turma || s.turma || s.cod_turma || s.serie || ''; 
+        
+        const parseClassCode = (code) => { 
+            if (!code) return null; 
+            const clean = String(code).replace(/\s+/g, '').toUpperCase(); 
+            const match = clean.match(/^(\d{1,2})([MT])(\d)(\d)/); 
+            return match ? { module: match[1], period: match[2], day: parseInt(match[3]), slot: match[4] } : null; 
+        };
+
+        const getStudentRawData = (student) => {
+            const keys = Object.keys(student);
+            const norm = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+            
+            let tot = 0, faltas = 0, freqRaw = 0, cons = 0;
+            let hasTot = false, hasFaltas = false, hasFreq = false, isPerc = false;
+
+            const totKey = keys.find(k => {
+                const n = norm(k);
+                return (n.includes('qntd') || n.includes('qtde') || n.includes('total') || n.includes('aulasdada') || n.includes('ministrada')) && !n.includes('falta') && !n.includes('freq') && !n.includes('pres');
+            });
+            if (totKey && student[totKey] !== undefined && String(student[totKey]).trim() !== '') {
+                hasTot = true;
+                tot = parseInt(String(student[totKey]).replace(/[^0-9]/g, '')) || 0;
+            }
+
+            const faltasKey = keys.find(k => {
+                const n = norm(k);
+                return n === 'faltas' || n === 'falta' || n === 'f';
+            });
+            if (faltasKey && student[faltasKey] !== undefined && String(student[faltasKey]).trim() !== '') {
+                hasFaltas = true;
+                faltas = parseInt(String(student[faltasKey]).replace(/[^0-9]/g, '')) || 0;
+            }
+
+            const freqKey = keys.find(k => {
+                const n = norm(k);
+                return n.includes('freq') || n.includes('presen') || n.includes('assistid') || n.includes('pres');
+            });
+            if (freqKey && student[freqKey] !== undefined && String(student[freqKey]).trim() !== '') {
+                hasFreq = true;
+                const valStr = String(student[freqKey]).trim();
+                if (valStr.includes('%') || norm(freqKey).includes('perc') || norm(freqKey).includes('porcent')) isPerc = true;
+                freqRaw = parseInt(valStr.replace(/[^0-9]/g, '')) || 0;
+            }
+
+            const consKey = keys.find(k => {
+                const n = norm(k);
+                return n.includes('consec') || (n.includes('falta') && n.includes('seg'));
+            });
+            if (consKey && student[consKey] !== undefined && String(student[consKey]).trim() !== '') {
+                cons = parseInt(String(student[consKey]).replace(/[^0-9]/g, '')) || 0;
+            }
+
+            return { tot, faltas, freqRaw, hasTot, hasFaltas, hasFreq, isPerc, cons };
+        };
+
+        const sanitizeId = (str) => {
+            if (!str) return Math.random().toString(36).substring(7);
+            return String(str).replace(/[^a-zA-Z0-9_-]/g, '_');
+        };
+
+        const isCurrentAutoSlot = (dayIndex, slot) => {
+            const now = new Date();
+            const currentDay = now.getDay() - 1; // 0 = Seg
+            if (currentDay !== dayIndex) return false;
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            const startMinutes = slot.startHour * 60 + slot.startMin;
+            const endMinutes = slot.endHour * 60 + slot.endMin;
+            return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+        };
+
+        const callGemini = async (prompt) => {
+            if (!GEMINI_API_KEY) return "⚠️ Chave da API Gemini não configurada.";
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+                });
+                if (!response.ok) throw new Error('Erro API');
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sem resposta.";
+            } catch (error) { return "Erro IA: " + error.message; }
+        };
+
+        const Toast = ({ message, onClose }) => {
+            if (!message) return null;
+            return (
+                <div className="fixed top-4 left-4 right-4 z-[9999] flex justify-center pointer-events-none animate-fadeIn">
+                    <div className="bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 pointer-events-auto max-w-sm w-full mx-auto backdrop-blur-xl bg-opacity-90 border border-slate-700/20">
+                        <Info size={20} className="text-blue-400 shrink-0" />
+                        <span className="text-sm font-medium flex-1">{message}</span>
+                        <button onClick={onClose} className="hover:text-gray-300 p-1"><X size={18} /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        class ErrorBoundary extends React.Component {
+          constructor(props) { super(props); this.state = { hasError: false }; }
+          static getDerivedStateFromError(error) { return { hasError: true }; }
+          componentDidCatch(error, errorInfo) { console.error("Erro React:", error, errorInfo); }
+          render() {
+            if (this.state.hasError) {
+              return (
+                <div className="min-h-screen flex items-center justify-center bg-red-50 p-8 text-center">
+                    <div className="bg-white p-10 rounded-3xl shadow-xl max-w-sm border border-red-100">
+                        <AlertOctagon size={48} className="mx-auto mb-4 text-red-600"/>
+                        <h1 className="text-xl font-black text-slate-800">Falha no Carregamento</h1>
+                        <p className="text-slate-500 text-sm mt-2 mb-6">Ocorreu um erro inesperado na interface. Os seus dados estão seguros.</p>
+                        <button onClick={() => window.location.reload()} className="w-full bg-red-600 text-white py-3 rounded-xl font-bold">Recarregar App</button>
+                    </div>
+                </div>
+              );
+            }
+            return this.props.children;
+          }
+        }
+
+        const SlotCard = ({ date, slot, visits, schools, onOpenModal }) => {
+            const dateStr = formatDateLocal(date);
+            const visit = visits.find(v => v.date === dateStr && v.slot === slot.id);
+            const school = schools.find(s => s.id === visit?.schoolId);
+            const baseClasses = "flex flex-col justify-between p-2 rounded-lg border cursor-pointer transition-all active:scale-95 h-20 md:h-24";
+
+            if (visit?.status === 'holiday') return (
+                <div onClick={() => onOpenModal(date, slot.id)} className={`${baseClasses} border-orange-300 bg-orange-100`}>
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <CalendarOff className="text-orange-500 mb-1" size={16} />
+                        <span className="font-bold text-orange-600 text-[10px] uppercase text-center leading-tight line-clamp-2">{visit.notes || 'FERIADO'}</span>
+                    </div>
+                </div>
+            );
+
+            if (visit?.status === 'absence') return (
+                <div onClick={() => onOpenModal(date, slot.id)} className={`${baseClasses} border-red-300 bg-red-100`}>
+                     <div className="flex flex-col items-center justify-center h-full">
+                        <UserX className="text-red-500 mb-1" size={16} />
+                        <span className="font-bold text-red-600 text-[10px] uppercase text-center leading-tight line-clamp-2">{visit.notes || 'AUSÊNCIA'}</span>
+                    </div>
+                </div>
+            );
+            
+            let bg='bg-gray-50', border='border-gray-200', text='text-gray-400', icon=null;
+            if (visit && school) {
+                if (visit.status==='visited') { bg='bg-emerald-50'; border='border-emerald-300'; text='text-emerald-700'; icon=<Check size={14} className="text-emerald-500"/>; }
+                else if (visit.status==='missed') { bg='bg-amber-50'; border='border-amber-300'; text='text-amber-700'; icon=<AlertTriangle size={14} className="text-amber-500"/>; }
+                else { bg='bg-blue-50'; border='border-blue-200'; text='text-blue-700'; }
+            }
+
+            return (
+                <div onClick={() => onOpenModal(date, slot.id)} className={`${baseClasses} ${bg} ${border}`}>
+                    <div className="flex justify-between items-start">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">{slot.label.split('-')[0]}</span>
+                        {icon}
+                    </div>
+                    <div className={`text-xs font-medium leading-tight ${text} line-clamp-2`}>{school ? school.name : 'Disponível'}</div>
+                </div>
+            );
+        };
+
+        const PublicDashboard = ({ shareId, db, appId, auth }) => {
+            const [data, setData] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+
+            useEffect(() => {
+                let unsubscribe = null;
+                const initPublic = async () => {
+                    try {
+                        if (auth && !auth.currentUser) {
+                            try {
+                                await signInAnonymously(auth);
+                            } catch (authErr) {
+                                console.warn("Login anônimo não está ativado no Firebase. A tentar leitura pública direta...");
+                            }
+                        }
+                        
+                        const ref = doc(db, 'artifacts', appId, 'public', 'data', 'shared_dashboards', shareId);
+                        unsubscribe = onSnapshot(ref, (snap) => {
+                            if (snap.exists()) {
+                                setData(snap.data());
+                                setError(null);
+                            } else {
+                                setError("Este painel de escola não existe ou já foi removido.");
+                            }
+                            setLoading(false);
+                        }, (err) => { 
+                            console.error("Erro Firebase:", err);
+                            setError("Permissão negada no banco de dados. Por favor, ative o 'Login Anónimo' no seu Firebase ou ajuste as Regras do Firestore."); 
+                            setLoading(false); 
+                        });
+                    } catch (e) { 
+                        console.error("Erro interno:", e);
+                        setError("Falha técnica ao inicializar a página: " + e.message); 
+                        setLoading(false); 
+                    }
+                };
+                initPublic();
+                
+                return () => {
+                    if (unsubscribe) unsubscribe();
+                };
+            }, [shareId, db, appId, auth]);
+
+            if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="animate-spin text-blue-600 w-12 h-12"/></div>;
+            if (error) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="bg-white p-8 rounded-3xl shadow-xl border border-red-100 max-w-sm text-center"><AlertTriangle className="mx-auto mb-4 text-red-500" size={48}/><p className="text-red-700 font-bold">{error}</p></div></div>;
+
+            return (
+                <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900 pb-20">
+                    <div className="max-w-5xl mx-auto space-y-6 animate-fadeIn">
+                        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+                            <div>
+                                <h1 className="text-2xl font-black text-slate-800 flex items-center gap-3"><School className="text-blue-600"/> {data?.schoolName || 'Polo Desconhecido'}</h1>
+                                <p className="text-sm text-slate-500 font-medium mt-1">Acesso Leitura • Atualizado em: {data?.updatedAt ? new Date(data.updatedAt).toLocaleDateString('pt-BR') : '--'} às {data?.updatedAt ? new Date(data.updatedAt).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) : '--'}</p>
+                            </div>
+                            <div className="bg-blue-50 border border-blue-100 text-blue-700 px-5 py-3 rounded-2xl font-bold flex items-center gap-2">
+                                <Users size={20}/> {data?.stats?.total || 0} Alunos Matriculados
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 p-8 rounded-3xl shadow-sm">
+                                <p className="text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">Média de Presença</p>
+                                <h3 className="text-6xl font-black text-emerald-600 flex items-center gap-2"><Percent size={48}/> {data?.stats?.avgPercentage || 0}%</h3>
+                            </div>
+                            <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm">
+                                <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Alunos Frequentes Ativamente</p>
+                                <h3 className="text-6xl font-black text-blue-600">{data?.stats?.attending || 0} <span className="text-2xl text-slate-400 font-bold">/ {data?.stats?.total || 0}</span></h3>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mt-8">
+                            <div className="bg-slate-50 px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+                                <h3 className="font-black text-slate-800 text-lg flex items-center gap-2"><List size={20} className="text-blue-500"/> Lista de Alunos</h3>
+                            </div>
+                            <div className="overflow-x-auto max-h-[60vh] custom-scrollbar">
+                                <table className="w-full text-left text-sm whitespace-nowrap">
+                                    <thead className="bg-white text-slate-500 font-bold sticky top-0 shadow-sm z-10">
+                                        <tr>
+                                            <th className="p-4 border-b border-slate-100 uppercase tracking-wide text-xs">Aluno</th>
+                                            <th className="p-4 border-b border-slate-100 uppercase tracking-wide text-xs">Turma</th>
+                                            <th className="p-4 border-b border-slate-100 text-center uppercase tracking-wide text-xs">Frequência</th>
+                                            <th className="p-4 border-b border-slate-100 text-center uppercase tracking-wide text-xs">Semana</th>
+                                            <th className="p-4 border-b border-slate-100 text-center uppercase tracking-wide text-xs">Faltas Consecutivas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {data?.students?.map((s, i) => {
+                                            let badgeColor = 'bg-slate-100 text-slate-600 border border-slate-200';
+                                            if (s.total > 0) {
+                                                if (s.percentage >= 75) badgeColor = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                                                else if (s.percentage >= 50) badgeColor = 'bg-amber-50 text-amber-700 border border-amber-200';
+                                                else badgeColor = 'bg-red-50 text-red-700 border border-red-200';
+                                            }
+
+                                            return (
+                                                <tr key={i} className="hover:bg-slate-50 transition-colors">
+                                                    <td className="p-4 font-bold text-slate-800">{s.name}</td>
+                                                    <td className="p-4 text-slate-600 font-medium">
+                                                        <div className="flex items-center gap-2">
+                                                            {s.classCode}
+                                                            {s.shift === 'Manhã' && <Sun size={14} className="text-amber-500"/>}
+                                                            {s.shift === 'Tarde' && <Moon size={14} className="text-indigo-500"/>}
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-4 text-center">
+                                                        <span className={`px-3 py-1.5 rounded-xl font-bold text-xs ${badgeColor}`}>
+                                                            {s.freq} / {s.total} ({s.percentage}%)
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-4 text-center">
+                                                        {s.trend > 0 ? (
+                                                            <span className="text-emerald-500 flex items-center justify-center gap-1 text-xs font-bold"><TrendingUp size={14}/> +{s.trend}%</span>
+                                                        ) : s.trend < 0 ? (
+                                                            <span className="text-red-500 flex items-center justify-center gap-1 text-xs font-bold"><TrendingDown size={14}/> {s.trend}%</span>
+                                                        ) : (
+                                                            <span className="text-slate-300 flex items-center justify-center gap-1 text-xs font-bold"><Minus size={14}/></span>
+                                                        )}
+                                                    </td>
+                                                    <td className="p-4 text-center">
+                                                        {s.consecutive >= 3 ? (
+                                                            <span className="text-xs bg-red-100 text-red-700 font-bold px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5 w-fit mx-auto shadow-sm border border-red-200"><AlertTriangle size={14}/> {s.consecutive} Faltas</span>
+                                                        ) : (
+                                                            <span className="text-xs text-slate-400 font-medium">—</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                        {(!data?.students || data.students.length === 0) && (
+                                            <tr>
+                                                <td colSpan="5" className="text-center py-8 text-slate-500 font-bold">Nenhum aluno encontrado para este polo.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const AuthScreen = ({ keepLoggedIn, setKeepLoggedIn }) => {
+          const [isRegistering, setIsRegistering] = useState(false);
+          const [email, setEmail] = useState('');
+          const [password, setPassword] = useState('');
+          const [error, setError] = useState('');
+          const [loading, setLoading] = useState(false);
+
+          const handleAuth = async (e) => {
+            e.preventDefault(); 
+            setError(''); 
+            setLoading(true);
+            try {
+                const persistence = keepLoggedIn ? browserLocalPersistence : browserSessionPersistence;
+                await setPersistence(auth, persistence);
+                if (isRegistering) await createUserWithEmailAndPassword(auth, email, password);
+                else await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) { setError('Credenciais inválidas. Verifique os dados ou crie uma conta.'); } finally { setLoading(false); }
+          };
+          
+          return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 z-0"></div>
+              <div className="glass-panel rounded-3xl shadow-2xl w-full max-w-sm p-10 animate-fadeIn z-10 relative">
+                <div className="text-center mb-8">
+                    <div className="bg-gradient-to-tr from-blue-600 to-indigo-500 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white shadow-lg"><User size={40} /></div>
+                    <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">{isRegistering ? 'Nova Conta' : 'Acesso Pessoal'}</h1>
+                </div>
+                {error && <div className="bg-red-50 border border-red-100 text-red-600 p-4 rounded-xl mb-6 text-xs font-bold text-center">{error}</div>}
+                <form onSubmit={handleAuth} className="space-y-5">
+                  <input type="email" required className="w-full p-4 border rounded-xl outline-none focus:ring-2 ring-blue-500/20" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <input type="password" required className="w-full p-4 border rounded-xl outline-none focus:ring-2 ring-blue-500/20" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <div className="flex items-center gap-3">
+                      <input type="checkbox" id="keep" checked={keepLoggedIn} onChange={(e) => setKeepLoggedIn(e.target.checked)} className="w-5 h-5 rounded border-slate-300 text-blue-600"/>
+                      <label htmlFor="keep" className="text-sm text-slate-600 font-medium cursor-pointer">Manter conectado</label>
+                  </div>
+                  <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition">
+                      {loading ? <Loader2 className="animate-spin mx-auto"/> : (isRegistering ? 'Cadastrar' : 'Entrar')}
+                  </button>
+                </form>
+                <button onClick={() => setIsRegistering(!isRegistering)} className="mt-8 w-full text-center text-sm text-slate-600 font-bold">{isRegistering ? 'Já tenho conta' : 'Criar nova conta'}</button>
+              </div>
+            </div>
+          );
+        };
+
+        const App = () => {
+          const [shareParam, setShareParam] = useState(() => {
+              const hash = window.location.hash;
+              return hash.startsWith('#share=') ? hash.replace('#share=', '') : null;
+          });
+          const isSharedView = !!shareParam;
+
+          const [user, setUser] = useState(null);
+          const [loading, setLoading] = useState(true);
+          const [view, setView] = useState('home'); 
+          const [subView, setSubView] = useState('stats'); 
+          const [schools, setSchools] = useState([]);
+          const [visits, setVisits] = useState([]);
+          const [instructors, setInstructors] = useState([]); 
+          const [evaluations, setEvaluations] = useState([]); 
+          const [notes, setNotes] = useState([]); 
+          const [weeklyHist, setWeeklyHist] = useState([]); 
+          const [importedStudents, setImportedStudents] = useState([]); 
+          const [classAttendance, setClassAttendance] = useState({}); 
+
+          const [currentDate, setCurrentDate] = useState(new Date());
+          const [isModalOpen, setIsModalOpen] = useState(false);
+          const [isEvalModalOpen, setIsEvalModalOpen] = useState(false);
+          const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+          const [isNoteModalOpen, setIsNoteModalOpen] = useState(false); 
+          const [isHistoryManagerOpen, setIsHistoryManagerOpen] = useState(false);
+          const [importAlert, setImportAlert] = useState(null);
+          const [keepLoggedIn, setKeepLoggedIn] = useState(true);
+
+          const [selectedSlot, setSelectedSlot] = useState(null);
+          const [selectedVacantSlot, setSelectedVacantSlot] = useState(null);
+          const [vacantModalOpen, setVacantModalOpen] = useState(false);
+          const [scheduleStudentListOpen, setScheduleStudentListOpen] = useState(false);
+          const [selectedClassForList, setSelectedClassForList] = useState(null);
+          const [mobileScheduleDay, setMobileScheduleDay] = useState(new Date().getDay() > 0 && new Date().getDay() < 6 ? new Date().getDay() - 1 : 0);
+
+          const [editData, setEditData] = useState({ schoolId: '', status: 'visited', type: 'Pedagógica', notes: '', isHoliday: false, isAbsence: false });
+          const [evalData, setEvalData] = useState({ instructorId: '', scores: {}, comments: {} }); 
+          const [noteData, setNoteData] = useState({ title: '', content: '', category: 'general', date: '' }); 
+          const [historyData, setHistoryData] = useState({ instructorName: '', evaluations: [] }); 
+          
+          const [notification, setNotification] = useState(null);
+          const [deleteModal, setDeleteModal] = useState({ isOpen: false, type: null, id: null, title: '' });
+          const [rawCsvData, setRawCsvData] = useState('');
+          const [selectedSchoolFilter, setSelectedSchoolFilter] = useState('');
+          const [selectedShiftFilter, setSelectedShiftFilter] = useState('todos'); 
+          const [searchTerm, setSearchTerm] = useState('');
+          
+          const fileInputRef = useRef(null);
+
+          useEffect(() => {
+              const handleHashChange = () => {
+                  const hash = window.location.hash;
+                  setShareParam(hash.startsWith('#share=') ? hash.replace('#share=', '') : null);
+              };
+              window.addEventListener('hashchange', handleHashChange);
+              return () => window.removeEventListener('hashchange', handleHashChange);
+          }, []);
+
+          const classMaxTotals = useMemo(() => {
+              const maxes = {};
+              importedStudents.forEach(s => {
+                  const code = normalizeStr(getStudentClass(s));
+                  const data = getStudentRawData(s);
+                  
+                  let implied = data.tot;
+                  if (!data.hasTot && !data.isPerc) {
+                      if (data.hasFreq && data.hasFaltas) implied = data.freqRaw + data.faltas;
+                      else if (data.hasFreq) implied = data.freqRaw;
+                      else if (data.hasFaltas) implied = data.faltas;
+                  }
+                  
+                  if (!maxes[code] || implied > maxes[code]) {
+                      maxes[code] = implied;
+                  }
+              });
+              return maxes;
+          }, [importedStudents]);
+
+          const getStudentStats = (student, idx = 0) => {
+              const sId = sanitizeId(student.id_pessoa || student.n_pessoa || `aluno-${idx}`);
+              const classCodeRaw = getStudentClass(student);
+              const classCode = normalizeStr(classCodeRaw);
+              const data = getStudentRawData(student);
+              
+              let baseTot = data.tot;
+              let baseFreq = 0;
+
+              if (data.hasTot && data.tot > 0) {
+                  if (data.hasFaltas) baseFreq = Math.max(0, baseTot - data.faltas);
+                  else if (data.hasFreq) baseFreq = data.isPerc ? Math.round((data.freqRaw / 100) * baseTot) : data.freqRaw;
+              } else {
+                  baseTot = classMaxTotals[classCode] || 0;
+                  if (data.hasFreq) {
+                      baseFreq = data.isPerc ? Math.round((data.freqRaw / 100) * baseTot) : data.freqRaw;
+                  } else if (data.hasFaltas) {
+                      baseFreq = Math.max(0, baseTot - data.faltas);
+                  }
+              }
+
+              let localFreq = 0;
+              let localDates = new Set();
+              
+              Object.keys(classAttendance).forEach(key => {
+                  if (classAttendance[key] && classCodeRaw && key.startsWith(`${classCodeRaw}_`)) {
+                      const datePart = key.substring(key.lastIndexOf('_') + 1);
+                      localDates.add(datePart);
+                      const middlePart = key.substring(classCodeRaw.length + 1, key.lastIndexOf('_'));
+                      if (middlePart === sId) localFreq++;
+                  }
+              });
+
+              const totalFreq = baseFreq + localFreq;
+              
+              let totalClasses = baseTot + localDates.size;
+              if (totalClasses < totalFreq) totalClasses = totalFreq;
+
+              let perc = 0;
+              if (totalClasses > 0) {
+                  perc = Math.round((totalFreq / totalClasses) * 100);
+              } else if (data.isPerc) {
+                  perc = data.freqRaw > 100 ? 100 : data.freqRaw;
+              }
+
+              // Tendência (Frequência da semana passada)
+              const pastPerc = (weeklyHist.length > 0 && weeklyHist[0].studentData && weeklyHist[0].studentData[sId] !== undefined) 
+                               ? weeklyHist[0].studentData[sId] 
+                               : perc; 
+              const trend = perc - pastPerc;
+
+              return { freq: totalFreq, tot: totalClasses, perc, cons: data.cons, sId, trend };
+          };
+
+          const filteredStudentsList = useMemo(() => {
+              let data = importedStudents;
+              if (selectedSchoolFilter) {
+                 const norm = normalizeStr(selectedSchoolFilter);
+                 data = data.filter(s => normalizeStr(s[findSchoolColumn(s)]).includes(norm));
+              }
+              if (selectedShiftFilter !== 'todos') {
+                  data = data.filter(s => {
+                      const shift = detectShift(getStudentClass(s));
+                      return selectedShiftFilter === 'manha' ? shift === 'Manhã' : shift === 'Tarde';
+                  });
+              }
+              if (searchTerm) {
+                 const term = searchTerm.toLowerCase();
+                 data = data.filter(s => (s.n_pessoa || '').toLowerCase().includes(term));
+              }
+              return data;
+          }, [importedStudents, selectedSchoolFilter, selectedShiftFilter, searchTerm]);
+
+          const dashboardStats = useMemo(() => {
+              const total = filteredStudentsList.length;
+              let attending = 0;
+              let sumPerc = 0; 
+              
+              filteredStudentsList.forEach((s, idx) => {
+                  const stats = getStudentStats(s, idx);
+                  if (stats.perc > 0) attending++;
+                  sumPerc += stats.perc; 
+              });
+              
+              const avgPercentage = total > 0 ? Math.round(sumPerc / total) : 0;
+              return { total, attending, avgPercentage };
+          }, [filteredStudentsList, classAttendance]);
+
+          const classDistribution = useMemo(() => {
+              const counts = {};
+              filteredStudentsList.forEach(s => {
+                  const code = getStudentClass(s);
+                  const parsed = parseClassCode(code);
+                  let levelName = 'Outros';
+                  
+                  if (parsed && LEVEL_MAP[parsed.module]) {
+                      levelName = LEVEL_MAP[parsed.module];
+                  } else if (s.n_mc) {
+                      levelName = String(s.n_mc).toUpperCase().trim();
+                  }
+
+                  counts[levelName] = (counts[levelName] || 0) + 1;
+              });
+              
+              return Object.entries(counts)
+                  .map(([name, count]) => ({ name, count }))
+                  .sort((a, b) => b.count - a.count); 
+          }, [filteredStudentsList]);
+
+          const autoSchedule = useMemo(() => {
+              const schedule = {};
+              const target = selectedSchoolFilter 
+                ? importedStudents.filter(s => normalizeStr(s[findSchoolColumn(s)]).includes(normalizeStr(selectedSchoolFilter)))
+                : [];
+
+              target.forEach(student => {
+                  const parsed = parseClassCode(getStudentClass(student));
+                  if (parsed) {
+                      const dayIdx = parsed.day - 2;
+                      const slotKey = parsed.period === 'M' ? (parsed.slot === '1' ? 'm1' : 'm2') : (parsed.slot === '1' ? 't1' : 't2');
+                      if (dayIdx >= 0 && dayIdx <= 4) {
+                          const key = `${dayIdx}_${slotKey}`;
+                          if (!schedule[key]) schedule[key] = { name: LEVEL_MAP[parsed.module] || `Módulo ${parsed.module}`, code: getStudentClass(student), students: [], count: 0 };
+                          if (schedule[key].code === getStudentClass(student)) {
+                              schedule[key].students.push(student);
+                              schedule[key].count++;
+                          }
+                      }
+                  }
+              });
+              return schedule;
+          }, [importedStudents, selectedSchoolFilter]);
+
+          const topSchools = useMemo(() => {
+              if (importedStudents.length === 0) return [];
+              const counts = {};
+              importedStudents.forEach(s => {
+                  const poloKey = findSchoolColumn(s);
+                  const poloName = s[poloKey] || 'Desconhecido';
+                  const normalizedPoloRaw = normalizeStr(poloName);
+                  const matchedSchool = schools.find(sch => 
+                      normalizedPoloRaw.includes(normalizeStr(sch.name)) || 
+                      normalizeStr(sch.name).includes(normalizedPoloRaw)
+                  );
+                  const finalName = matchedSchool ? matchedSchool.name : poloName.trim();
+                  counts[finalName] = (counts[finalName] || 0) + 1;
+              });
+              return Object.entries(counts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count).slice(0, 3);
+          }, [importedStudents, schools]);
+
+          const monthDays = useMemo(() => {
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const days = [];
+            while (date.getMonth() === currentDate.getMonth()) {
+              const dow = date.getDay();
+              if (dow >= 1 && dow <= 5) days.push(new Date(date));
+              date.setDate(date.getDate() + 1);
+            }
+            return days;
+          }, [currentDate]);
+
+          const weeks = useMemo(() => {
+            const weeksArr = []; let cur = [];
+            monthDays.forEach(d => { if (cur.length > 0 && d.getDay() === 1) { weeksArr.push(cur); cur = []; } cur.push(d); });
+            if (cur.length > 0) weeksArr.push(cur);
+            return weeksArr;
+          }, [monthDays]);
+
+          const schoolCountsInMonth = useMemo(() => {
+             const counts = {}; 
+             const prefix = formatDateLocal(currentDate).slice(0, 7);
+             visits.forEach(v => {
+               if (v.date.startsWith(prefix) && v.schoolId && v.status !== 'holiday') counts[v.schoolId] = (counts[v.schoolId] || 0) + 1;
+             });
+             return counts;
+          }, [visits, currentDate]);
+
+          const unvisitedSchools = useMemo(() => {
+             const prefix = formatDateLocal(currentDate).slice(0, 7);
+             const currentMonthVisits = visits.filter(v => v.date.startsWith(prefix) && v.status !== 'holiday');
+             const validSchools = schools.filter(s => !s.name.toUpperCase().includes("CAP"));
+             const pendingList = [];
+             validSchools.forEach(school => {
+                 const isDouble = school.isDouble || !!school.instructor2Id;
+                 const schoolVisits = currentMonthVisits.filter(v => v.schoolId === school.id);
+                 const hasMorning = schoolVisits.some(v => v.slot === 1 || v.slot === 2);
+                 const hasAfternoon = schoolVisits.some(v => v.slot === 3 || v.slot === 4);
+                 if (isDouble) {
+                     if (!hasMorning) pendingList.push({ ...school, name: `${school.name} (Manhã)`, originalName: school.name });
+                     if (!hasAfternoon) pendingList.push({ ...school, name: `${school.name} (Tarde)`, originalName: school.name });
+                 } else {
+                     if (schoolVisits.length === 0) pendingList.push(school);
+                 }
+             });
+             return pendingList;
+          }, [schools, visits, currentDate]);
+
+          const instructorStats = useMemo(() => {
+            return instructors.map(inst => {
+                const instructorEvals = evaluations.filter(e => e.instructorId === inst.id);
+                const totalScore = instructorEvals.reduce((acc, curr) => acc + (curr.average || 0), 0);
+                const avg = instructorEvals.length ? (totalScore / instructorEvals.length) : 0;
+                return { ...inst, average: avg, count: instructorEvals.length };
+            }).sort((a, b) => b.average - a.average);
+          }, [instructors, evaluations]);
+          
+          const riskStudents = useMemo(() => {
+             return importedStudents.filter((s, idx) => getStudentStats(s, idx).cons >= 3);
+          }, [importedStudents, classAttendance]);
+
+          const schoolRankings = useMemo(() => {
+             const map = new Map();
+             importedStudents.forEach((s, idx) => {
+                 const poloKey = findSchoolColumn(s);
+                 let poloName = s[poloKey];
+                 if (!poloName) { poloName = 'Desconhecido'; } 
+                 else { poloName = poloName.trim(); }
+                 const normalizedPoloRaw = normalizeStr(poloName);
+                 const matchedSchool = schools.find(sch => 
+                      normalizedPoloRaw.includes(normalizeStr(sch.name)) || 
+                      normalizeStr(sch.name).includes(normalizedPoloRaw)
+                 );
+                 const finalName = matchedSchool ? matchedSchool.name : poloName;
+                 const normalizedKey = normalizeStr(finalName); 
+
+                 const stats = getStudentStats(s, idx);
+
+                 if(!map.has(normalizedKey)) map.set(normalizedKey, { name: finalName, sumPerc: 0, students: 0 });
+                 const entry = map.get(normalizedKey);
+                 entry.sumPerc += stats.perc; 
+                 entry.students++;
+             });
+             
+             const ranking = Array.from(map.values()).map(r => ({ 
+                 ...r, 
+                 percentage: r.students > 0 ? Math.round(r.sumPerc / r.students) : 0 
+             }));
+             
+             const top3 = [...ranking].sort((a,b) => b.students - a.students).slice(0, 3);
+             const bottom3 = [...ranking].filter(r => r.students > 0).sort((a,b) => a.students - b.students).slice(0, 3);
+             const topFreq = [...ranking].filter(r => r.students > 0).sort((a,b) => b.percentage - a.percentage).slice(0, 3);
+             const bottomFreq = [...ranking].filter(r => r.students > 5).sort((a,b) => a.percentage - b.percentage).slice(0, 3);
+             return { full: ranking, top3, bottom3, topFreq, bottomFreq };
+          }, [importedStudents, schools, classAttendance]);
+
+          const freeSchoolsForSlot = (dayIndex, slotId) => {
+             const busySchoolNamesStr = new Set();
+             importedStudents.forEach(student => {
+                 const code = getStudentClass(student);
+                 const parsed = parseClassCode(code);
+                 if (parsed) {
+                     const sDayIndex = parsed.day - 2; 
+                     let sSlotKey = '';
+                     if (parsed.slot === '1') sSlotKey = (parsed.period === 'M') ? 'm1' : 't1';
+                     if (parsed.slot === '2') sSlotKey = (parsed.period === 'M') ? 'm2' : 't2';
+                     
+                     if (sDayIndex === dayIndex && sSlotKey === slotId) {
+                         const poloKey = findSchoolColumn(student);
+                         const poloName = student[poloKey] || '';
+                         if(poloName) busySchoolNamesStr.add(normalizeStr(poloName));
+                     }
+                 }
+             });
+             return schools.filter(s => {
+                 const myName = normalizeStr(s.name);
+                 const isBusy = Array.from(busySchoolNamesStr).some(busyName => busyName.includes(myName) || myName.includes(busyName));
+                 return !isBusy;
+             });
+          };
+
+          const showToast = (m) => { setNotification(m); setTimeout(() => setNotification(null), 3000); };
+          const handlePrevMonth = () => { const d = new Date(currentDate); d.setMonth(d.getMonth() - 1); setCurrentDate(d); };
+          const handleNextMonth = () => { const d = new Date(currentDate); d.setMonth(d.getMonth() + 1); setCurrentDate(d); };
+
+          const openAddNoteModal = () => { 
+             setNoteData({ title: '', content: '', category: 'general', date: formatDateLocal(new Date()) }); 
+             setIsNoteModalOpen(true); 
+          };
+
+          const openModal = (date, slotId) => {
+            const dateStr = formatDateLocal(date);
+            const v = visits.find(v => v.date === dateStr && v.slot === slotId);
+            setSelectedSlot({ dateStr, slotId, dateObj: date });
+            setEditData(v ? { schoolId: v.schoolId || '', status: v.status, type: v.type || 'Pedagógica', notes: v.notes || '', isHoliday: v.status === 'holiday', isAbsence: v.status === 'absence' } : { schoolId: '', status: 'visited', type: 'Pedagógica', notes: '', isHoliday: false, isAbsence: false });
+            setIsModalOpen(true);
+          };
+
+          const handleNoteToGoogleCalendar = (title, content) => {
+            const sDate = new Date();
+            const eDate = new Date(); eDate.setHours(eDate.getHours() + 1);
+            const pad = n => n.toString().padStart(2, '0');
+            const fmtLocal = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+            window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title || 'Anotação')}&dates=${fmtLocal(sDate)}/${fmtLocal(eDate)}&details=${encodeURIComponent(content || '')}`, '_blank');
+          };
+
+          const handleAddToGoogleCalendar = () => {
+            if (!selectedSlot) return;
+            const slotInfo = SLOTS.find(s => s.id === selectedSlot.slotId);
+            
+            let title = "Visita Pedagógica";
+            let location = "";
+            
+            if (editData.isHoliday) title = "Feriado";
+            else if (editData.isAbsence) title = "Ausência";
+            else if (editData.schoolId) {
+                const school = schools.find(s => s.id === editData.schoolId);
+                title = `Visita: ${school ? school.name : 'Polo'}`;
+                location = school ? school.name : "";
+            }
+
+            const sDate = new Date(selectedSlot.dateObj); sDate.setHours(slotInfo.startHour, 0, 0);
+            const eDate = new Date(selectedSlot.dateObj); eDate.setHours(slotInfo.endHour, 0, 0);
+            
+            const pad = n => n.toString().padStart(2, '0');
+            const fmtLocal = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+            
+            window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${fmtLocal(sDate)}/${fmtLocal(eDate)}&details=${encodeURIComponent(editData.notes || '')}&location=${encodeURIComponent(location)}`, '_blank');
+          };
+
+          const saveNote = async () => {
+              if (!noteData.title || !noteData.content) return showToast("Preencha título e conteúdo.");
+              try {
+                  await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'notes'), { ...noteData, createdAt: new Date().toISOString() });
+                  setIsNoteModalOpen(false); showToast("Nota guardada com sucesso!");
+              } catch(e) { showToast("Erro: " + e.message); }
+          };
+
+          const saveVisit = async () => {
+            const docId = `${selectedSlot.dateStr}_slot_${selectedSlot.slotId}`;
+            const ref = doc(db, 'artifacts', appId, 'users', user.uid, 'visits', docId);
+            if (editData.isHoliday) await setDoc(ref, { date: selectedSlot.dateStr, slot: selectedSlot.slotId, schoolId: null, status: 'holiday', notes: editData.notes || 'Feriado' });
+            else if (editData.isAbsence) await setDoc(ref, { date: selectedSlot.dateStr, slot: selectedSlot.slotId, schoolId: null, status: 'absence', notes: editData.notes || 'Ausência' });
+            else if (!editData.schoolId) await deleteDoc(ref);
+            else await setDoc(ref, { date: selectedSlot.dateStr, slot: selectedSlot.slotId, schoolId: editData.schoolId, status: editData.status, notes: editData.notes, type: editData.type });
+            setIsModalOpen(false);
+          };
+          
+          const handleAutoSlotClickWrapper = (d, s) => {
+              const key = `${d}_${s}`;
+              if (autoSchedule[key]) { setSelectedClassForList(autoSchedule[key]); setScheduleStudentListOpen(true); }
+              else if (selectedSchoolFilter) showToast("Nenhum aluno neste horário.");
+          };
+
+          const handleVacantSlotClick = (day, slotId) => {
+             const free = freeSchoolsForSlot(day, slotId);
+             setSelectedVacantSlot({ label: AUTO_CLASS_SLOTS.find(x => x.id === slotId).label, freeSchools: free });
+             setVacantModalOpen(true);
+          };
+
+          const updateSchool = async (id, data) => { try { await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'schools', id), data); } catch(e) {} };
+          const addSchool = async (e) => { e.preventDefault(); const n = e.target.n.value; if(n.trim()) await addDoc(collection(db,'artifacts',appId,'users',user.uid,'schools'),{name:n}); e.target.reset(); };
+          const addInstructor = async (e) => { e.preventDefault(); const n = e.target.n.value; if(n.trim()) await addDoc(collection(db,'artifacts',appId,'users',user.uid,'instructors'),{name:n}); e.target.reset(); };
+          
+          const loadDefaultInstructors = async () => {
+             const existingNames = new Set(instructors.map(i => i.name));
+             const toAdd = DEFAULT_INSTRUCTORS_LIST.filter(name => !existingNames.has(name));
+             if (toAdd.length === 0) return showToast("Todos os instrutores padrão já estão cadastrados.");
+             await Promise.all(toAdd.map(name => addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'instructors'), { name })));
+             showToast(`${toAdd.length} instrutores adicionados!`);
+          };
+
+          const handleFileUpload = async (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              try {
+                  if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                      const rows = await readXlsxFile(file);
+                      if (rows.length < 2) return showToast("Ficheiro vazio ou sem dados.");
+                      const headers = rows[0].map(h => String(h).trim());
+                      const dataObjects = rows.slice(1).map(row => {
+                          const obj = {};
+                          headers.forEach((header, index) => { obj[header] = row[index] !== undefined ? String(row[index]) : ''; });
+                          return obj;
+                      });
+                      processImportedData(dataObjects);
+                  } else {
+                      Papa.parse(file, { header: true, skipEmptyLines: true, delimiter: "", complete: (results) => { if (results.data && results.data.length > 0) processImportedData(results.data); else showToast("Ficheiro vazio."); }});
+                  }
+              } catch (error) { showToast("Erro: " + error.message); }
+          };
+
+          const processCSVText = async () => {
+             if (!rawCsvData.trim()) return showToast("Cole os dados primeiro.");
+             const result = Papa.parse(rawCsvData, { header: true, skipEmptyLines: true });
+             if (result.errors.length > 0 && !result.data.length) return showToast("Erro ao ler dados colados.");
+             processImportedData(result.data);
+          };
+
+          const filteredWeeklyHist = useMemo(() => {
+              const result = [];
+              
+              weeklyHist.forEach(hist => {
+                  if (!selectedSchoolFilter && selectedShiftFilter === 'todos') {
+                      result.push(hist);
+                      return;
+                  }
+                  
+                  if (!hist.breakdown) {
+                      return; 
+                  }
+
+                  let mat = 0;
+                  let att = 0;
+                  const targetPolo = selectedSchoolFilter ? normalizeStr(selectedSchoolFilter) : null;
+
+                  Object.entries(hist.breakdown).forEach(([poloName, shifts]) => {
+                      if (targetPolo && !poloName.includes(targetPolo) && !targetPolo.includes(poloName)) return;
+                      
+                      const shiftsToCount = selectedShiftFilter === 'todos' ? ['manha', 'tarde', 'indefinido'] : [selectedShiftFilter];
+                      shiftsToCount.forEach(sh => {
+                          if (shifts[sh]) {
+                              mat += shifts[sh].mat;
+                              att += shifts[sh].att;
+                          }
+                      });
+                  });
+
+                  result.push({ ...hist, totalMatriculated: mat, totalAttending: att });
+              });
+              
+              return result;
+          }, [weeklyHist, selectedSchoolFilter, selectedShiftFilter]);
+
+          const saveWeeklySnapshot = async () => {
+             if (importedStudents.length === 0) return showToast("Sem dados para guardar.");
+
+             let attending = 0;
+             const breakdown = {};
+             const studentData = {};
+
+             importedStudents.forEach((s, idx) => {
+                 const stats = getStudentStats(s, idx);
+                 const isAttending = stats.perc > 0;
+                 if (isAttending) attending++;
+
+                 studentData[stats.sId] = stats.perc;
+
+                 const poloKey = findSchoolColumn(s);
+                 let poloName = s[poloKey] || 'Desconhecido';
+                 const normPolo = normalizeStr(poloName);
+                 const matchedSchool = schools.find(sch => normPolo.includes(normalizeStr(sch.name)) || normalizeStr(sch.name).includes(normPolo));
+                 const finalPoloName = matchedSchool ? normalizeStr(matchedSchool.name) : normPolo;
+
+                 const shift = detectShift(getStudentClass(s));
+                 const shiftKey = shift === 'Manhã' ? 'manha' : (shift === 'Tarde' ? 'tarde' : 'indefinido');
+
+                 if (!breakdown[finalPoloName]) {
+                     breakdown[finalPoloName] = { manha: { mat: 0, att: 0 }, tarde: { mat: 0, att: 0 }, indefinido: { mat: 0, att: 0 } };
+                 }
+
+                 breakdown[finalPoloName][shiftKey].mat++;
+                 if (isAttending) breakdown[finalPoloName][shiftKey].att++;
+             });
+             
+             await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'weekly_stats'), {
+                 date: new Date().toISOString(), totalMatriculated: importedStudents.length, totalAttending: attending,
+                 breakdown: breakdown, 
+                 studentData: studentData,
+                 weekLabel: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+             });
+             showToast("Evolução semanal detalhada guardada!");
+          };
+
+          // NOVA FUNÇÃO DE EXPORTAÇÃO
+          const exportGeneralReport = () => {
+              if (schoolRankings.full.length === 0) return showToast("Nenhum dado para exportar.");
+
+              const lastWeek = weeklyHist.length > 0 ? weeklyHist[0] : null;
+
+              const exportData = schoolRankings.full.map(polo => {
+                  let pastPerc = "Sem dados";
+                  
+                  if (lastWeek && lastWeek.breakdown && lastWeek.breakdown[polo.name]) {
+                      const b = lastWeek.breakdown[polo.name];
+                      const totalMat = b.manha.mat + b.tarde.mat + b.indefinido.mat;
+                      const totalAtt = b.manha.att + b.tarde.att + b.indefinido.att;
+                      pastPerc = totalMat > 0 ? Math.round((totalAtt / totalMat) * 100) : 0;
+                  }
+
+                  const evol = pastPerc !== "Sem dados" ? (polo.percentage - pastPerc) + "%" : "-";
+
+                  return {
+                      "Polo": polo.name,
+                      "Frequência Passada (%)": pastPerc !== "Sem dados" ? pastPerc + "%" : pastPerc,
+                      "Frequência Nova (%)": polo.percentage + "%",
+                      "Evolução": evol
+                  };
+              });
+
+              const csv = Papa.unparse(exportData);
+              const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' }); // Adiciona BOM para caracteres especiais
+              const link = document.createElement("a");
+              const url = URL.createObjectURL(blob);
+              link.setAttribute("href", url);
+              link.setAttribute("download", `Relatorio_Frequencia_${formatDateLocal(new Date())}.csv`);
+              link.style.visibility = 'hidden';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              showToast("Relatório exportado com sucesso!");
+          };
+
+          const openEvalModal = (instructorId) => { setEvalData({ instructorId, scores: {}, comments: {} }); setIsEvalModalOpen(true); };
+          const openHistoryModal = (instructorId) => {
+              const inst = instructors.find(i => i.id === instructorId);
+              const evals = evaluations.filter(e => e.instructorId === instructorId).sort((a, b) => new Date(b.date) - new Date(a.date));
+              setHistoryData({ instructorName: inst ? inst.name : 'Instrutor Desconhecido', evaluations: evals });
+              setIsHistoryModalOpen(true);
+          };
+
+          const saveEvaluation = async () => {
+              const scores = Object.values(evalData.scores);
+              if (scores.length === 0) return showToast("Preencha ao menos uma nota.");
+              const avg = scores.reduce((a,b)=>a+b,0) / scores.length;
+              await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'evaluations'), { instructorId: evalData.instructorId, scores: evalData.scores, comments: evalData.comments, average: parseFloat(avg.toFixed(1)), date: new Date().toISOString() });
+              setIsEvalModalOpen(false);
+          };
+
+          const confirmDelete = (type, id, title) => { setDeleteModal({ isOpen: true, type, id, title }); };
+          const executeDelete = async () => {
+              const { type, id } = deleteModal;
+              try {
+                  if (type === 'school') await deleteDoc(doc(db,'artifacts',appId,'users',user.uid,'schools',id));
+                  else if (type === 'instructor') await deleteDoc(doc(db,'artifacts',appId,'users',user.uid,'instructors',id));
+                  else if (type === 'note') await deleteDoc(doc(db,'artifacts',appId,'users',user.uid,'notes',id));
+                  else if (type === 'history') await deleteDoc(doc(db,'artifacts',appId,'users',user.uid,'weekly_stats',id));
+                  else if (type === 'reset_schools') {
+                      const vSnap = await getDocs(collection(db, 'artifacts', appId, 'users', user.uid, 'visits'));
+                      const sSnap = await getDocs(collection(db, 'artifacts', appId, 'users', user.uid, 'schools'));
+                      await Promise.all(vSnap.docs.map(d => deleteDoc(d.ref)));
+                      await Promise.all(sSnap.docs.map(d => deleteDoc(d.ref)));
+                      await Promise.all(DEFAULT_SCHOOLS_LIST.map(name => addDoc(collection(db,'artifacts',appId,'users',user.uid,'schools'), { name })));
+                      showToast("✅ Lista corrigida! Escolas e visitas repostas.");
+                  }
+                  setDeleteModal({ isOpen: false, type: null, id: null, title: '' });
+                  if(type !== 'reset_schools') showToast("Apagado com sucesso!");
+              } catch (err) { showToast("Erro ao apagar. Verifique a ligação."); }
+          };
+
+          const handleShareDashboard = async () => {
+              if (!selectedSchoolFilter) return showToast("Filtre um polo antes.");
+              const cleanName = selectedSchoolFilter.normalize("NFD").replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+              const shareId = `polo_${cleanName}`;
+              try {
+                  const studentsData = filteredStudentsList.map((s, idx) => {
+                      const stats = getStudentStats(s, idx);
+                      return {
+                          name: s.n_pessoa, classCode: getStudentClass(s), shift: detectShift(getStudentClass(s)), level: s.n_mc || '',
+                          freq: stats.freq, total: stats.tot, percentage: stats.perc, trend: stats.trend, consecutive: stats.cons
+                      };
+                  });
+                  await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'shared_dashboards', shareId), { schoolName: selectedSchoolFilter, stats: dashboardStats, students: studentsData, updatedAt: new Date().toISOString() });
+                  const shareUrl = `${window.location.origin}${window.location.pathname}#share=${shareId}`;
+                  const ta = document.createElement("textarea"); ta.value = shareUrl; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+                  showToast(`✅ Link copiado para partilhar!`);
+              } catch (e) { showToast("❌ Erro ao partilhar."); }
+          };
+
+          const processImportedData = async (dataList) => {
+             const mySchoolNames = new Set(schools.map(s => normalizeStr(s.name)));
+             const filteredData = dataList.filter(row => {
+                 const poloKey = findSchoolColumn(row);
+                 if (!poloKey) return false;
+                 return Array.from(mySchoolNames).some(myName => normalizeStr(row[poloKey] || '').includes(myName) || myName.includes(normalizeStr(row[poloKey] || '')));
+             });
+             if (filteredData.length === 0) {
+                 if (dataList.length > 0) setImportAlert({ title: "Atenção na Importação", message: `O sistema leu ${dataList.length} linhas, mas não encontrou alunos das escolas registadas. Verifique os nomes dos polos.`});
+                 else showToast("Ficheiro vazio ou ilegível.");
+                 return;
+             }
+             await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'imported_students', 'current_list'), { students: filteredData, updatedAt: new Date().toISOString() });
+             showToast(`Sucesso! ${filteredData.length} alunos importados.`);
+             if(fileInputRef.current) fileInputRef.current.value = ""; setRawCsvData(""); 
+          };
+
+          // --- FIREBASE LISTENERS ---
+          useEffect(() => {
+            if (configError || isSharedView || !auth) {
+                if (configError) setLoading(false);
+                return; 
+            }
+            const unsub = onAuthStateChanged(auth, u => { setUser(u); setLoading(false); });
+            return () => unsub();
+          }, [isSharedView]);
+
+          useEffect(() => {
+            if (!user || isSharedView || !db) return;
+            const unsubSchools = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'schools'), s => setSchools(s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b)=>a.name.localeCompare(b.name))));
+            const unsubVisits = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'visits'), s => setVisits(s.docs.map(d => ({ id: d.id, ...d.data() }))));
+            const unsubInstructors = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'instructors'), s => setInstructors(s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b)=>a.name.localeCompare(b.name))));
+            const unsubNotes = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'notes'), s => setNotes(s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))));
+            const unsubWeekly = onSnapshot(query(collection(db, 'artifacts', appId, 'users', user.uid, 'weekly_stats'), orderBy('date', 'desc')), s => setWeeklyHist(s.docs.map(d => ({ id: d.id, ...d.data() }))));
+            const unsubImported = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'imported_students'), s => { if(!s.empty) setImportedStudents(s.docs[0].data().students || []); });
+            const unsubAttendance = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'attendance'), s => { const am = {}; s.docs.forEach(doc => { am[doc.id] = doc.data().present; }); setClassAttendance(am); });
+            const unsubEvals = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'evaluations'), s => setEvaluations(s.docs.map(d => ({ id: d.id, ...d.data() }))));
+            
+            return () => { unsubSchools(); unsubVisits(); unsubInstructors(); unsubNotes(); unsubWeekly(); unsubImported(); unsubAttendance(); unsubEvals(); };
+          }, [user, isSharedView]);
+
+          if (configError) return <div className="h-screen flex items-center justify-center p-4 bg-red-50 text-red-700 font-bold">{configError}</div>;
+          if (isSharedView) return <PublicDashboard shareId={shareParam} db={db} appId={appId} auth={auth} />;
+          if (loading) return <div className="h-screen flex items-center justify-center text-blue-600 font-bold"><Loader2 className="animate-spin mr-2"/> A carregar...</div>;
+          if (!user) return <AuthScreen keepLoggedIn={keepLoggedIn} setKeepLoggedIn={setKeepLoggedIn} />;
+
+          return (
+            <div className="min-h-screen bg-slate-50 font-sans pb-20 text-slate-800">
+               <Toast message={notification} onClose={() => setNotification(null)} />
+               
+               <header className="bg-white sticky top-0 z-30 shadow-sm hidden md:block">
+                 <div className="border-b border-slate-100">
+                     <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                         <div className="flex items-center gap-3">
+                             <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                                 <Users2 size={22} strokeWidth={2.5}/>
+                             </div>
+                             <h1 className="text-xl font-black tracking-tight text-slate-800">Controle Geral</h1>
+                         </div>
+                         <div className="flex items-center gap-4">
+                             <div className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Online
+                             </div>
+                             <button onClick={()=>signOut(auth)} title="Terminar Sessão" className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition-all">
+                                 <LogOut size={20}/>
+                             </button>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div className="bg-slate-50/80 backdrop-blur-md border-b border-slate-200">
+                     <div className="max-w-7xl mx-auto px-4 py-2">
+                         <nav className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                             {[
+                                 { id: 'home', icon: <Home size={16}/>, label: 'Início' },
+                                 { id: 'reports', icon: <BarChart2 size={16}/>, label: 'Painéis' },
+                                 { id: 'calendar', icon: <Calendar size={16}/>, label: 'Agenda' },
+                                 { id: 'schools', icon: <School size={16}/>, label: 'Escolas' },
+                                 { id: 'team', icon: <Users size={16}/>, label: 'Equipe' },
+                                 { id: 'notes', icon: <Notebook size={16}/>, label: 'Notas' },
+                                 { id: 'import', icon: <Upload size={16}/>, label: 'Importar' }
+                             ].map(item => (
+                                 <button 
+                                     key={item.id} 
+                                     onClick={()=>setView(item.id)} 
+                                     className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap select-none ${
+                                         view === item.id 
+                                         ? 'bg-white shadow-sm text-blue-600 border border-slate-200' 
+                                         : 'text-slate-500 border border-transparent hover:bg-slate-200/50 hover:text-slate-700'
+                                     }`}
+                                 >
+                                     {item.icon} {item.label}
+                                 </button>
+                             ))}
+                         </nav>
+                     </div>
+                 </div>
+               </header>
+
+               <header className="md:hidden bg-white/95 backdrop-blur-md px-4 py-3 border-b flex justify-between items-center sticky top-0 z-30 pt-safe shadow-sm">
+                   <div className="flex items-center gap-2.5">
+                       <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-1.5 rounded-lg shadow-sm">
+                           <Users2 size={18} strokeWidth={2.5}/>
+                       </div>
+                       <span className="font-black text-slate-800 text-lg tracking-tight">Controle Geral</span>
+                   </div>
+                   <div className="flex items-center gap-3">
+                       <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+                       <button onClick={()=>signOut(auth)} className="text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 p-2 rounded-xl transition-colors"><LogOut size={18}/></button>
+                   </div>
+               </header>
+
+               <main className="max-w-7xl mx-auto px-4 py-6 pb-32 animate-fadeIn">
+                 {view === 'home' && (
+                     <div className="space-y-6">
+                        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
+                            <h2 className="text-3xl font-black mb-2 relative z-10">Controle Geral 👋</h2>
+                            <p className="opacity-90 font-medium relative z-10">Gestão integrada e segura da sua conta pessoal.</p>
+                            <Sparkles className="absolute right-8 bottom-8 opacity-10 text-white" size={100}/>
+                        </div>
+
+                        {riskStudents.length > 0 && (
+                            <div className="bg-red-50 border border-red-200 p-6 rounded-3xl shadow-sm">
+                                <h3 className="text-lg font-extrabold text-red-800 flex items-center gap-2 mb-4"><AlertTriangle className="text-red-600" /> Alerta de Evasão! (3+ Faltas)</h3>
+                                <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                                    {riskStudents.map((s, i) => (
+                                        <div key={i} className="min-w-[150px] bg-white p-3 rounded-xl border border-red-100 shadow-sm text-center">
+                                            <div className="font-bold text-red-700 text-sm truncate" title={s.n_pessoa}>{s.n_pessoa}</div>
+                                            <div className="text-xs text-red-500 mt-1">{getConsecutiveAbsences(s)} semanas</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                <h3 className="font-black text-slate-700 mb-4 flex items-center gap-2"><Trophy className="text-yellow-500" size={20}/> Top 3 Polos</h3>
+                                <div className="space-y-3">
+                                    {topSchools.map((s, i) => (
+                                        <div key={i} className="flex justify-between p-3 bg-yellow-50 rounded-xl border border-yellow-100"><span className="font-bold text-slate-700 flex gap-2"><span className="text-yellow-600">#{i+1}</span> <span className="truncate max-w-[120px]" title={s.name}>{s.name}</span></span><span className="text-sm font-black text-yellow-600">{s.count}</span></div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                <h3 className="font-black text-slate-700 mb-4 flex items-center gap-2"><TrendingUp className="text-blue-500" size={20}/> Oportunidades</h3>
+                                <div className="space-y-3">
+                                    {schoolRankings.bottom3.map((s, i) => (
+                                        <div key={i} className="flex items-center justify-between p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-lg font-bold text-blue-400">●</span>
+                                                <span className="font-bold text-slate-700 truncate max-w-[120px]" title={s.name}>{s.name}</span>
+                                            </div>
+                                            <span className="text-sm font-black text-blue-500">{s.students} alunos</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                <h3 className="font-black text-slate-700 mb-4 flex items-center gap-2"><Medal className="text-emerald-500" size={20}/> Maior Frequência</h3>
+                                <div className="space-y-3">
+                                    {schoolRankings.topFreq.map((s, i) => (
+                                        <div key={i} className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-lg font-bold text-emerald-400">★</span>
+                                                <span className="font-bold text-slate-700 truncate max-w-[120px]" title={s.name}>{s.name}</span>
+                                            </div>
+                                            <span className="text-sm font-black text-emerald-600">{s.percentage}%</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                <h3 className="font-black text-slate-700 mb-4 flex items-center gap-2"><AlertOctagon className="text-red-500" size={20}/> Atenção (Frequência)</h3>
+                                <div className="space-y-3">
+                                    {schoolRankings.bottomFreq.map((s, i) => (
+                                        <div key={i} className="flex items-center justify-between p-3 bg-red-50 rounded-xl border border-red-100">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-lg font-bold text-red-400">⚠</span>
+                                                <span className="font-bold text-slate-700 truncate max-w-[120px]" title={s.name}>{s.name}</span>
+                                            </div>
+                                            <span className="text-sm font-black text-red-500">{s.percentage}%</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                            <h3 className="font-black text-slate-700 mb-4 flex items-center gap-2 text-sm"><Clock className="text-slate-400"/> Monitor de Vagos (Hoje)</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                {AUTO_CLASS_SLOTS.map(slot => {
+                                   const isNow = isCurrentAutoSlot(new Date().getDay() - 1, slot);
+                                   const freeSchools = freeSchoolsForSlot(new Date().getDay() - 1, slot.id);
+                                   return (
+                                       <div key={slot.id} onClick={() => handleVacantSlotClick(new Date().getDay() - 1, slot.id)} className={`p-5 rounded-2xl border transition-all active:scale-95 cursor-pointer flex flex-col ${isNow ? 'live-indicator border-2 border-emerald-400 scale-[1.02]' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'}`}>
+                                           <div className="flex justify-between items-center mb-3">
+                                               <span className={`text-[10px] font-black uppercase ${isNow?'text-emerald-700':'text-slate-400'}`}>{slot.label}</span>
+                                               {isNow && <span className="bg-emerald-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black flex items-center gap-1"><span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span> AGORA</span>}
+                                           </div>
+                                           <div className="mt-auto">
+                                                <div className={`text-2xl font-black ${isNow ? 'text-emerald-700' : 'text-slate-800'}`}>{freeSchools.length}</div>
+                                                <div className={`text-[10px] font-bold uppercase ${isNow ? 'text-emerald-600' : 'text-slate-400'}`}>Polos Vagos</div>
+                                           </div>
+                                       </div>
+                                   )
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-2">Polos Pendentes (Mês)</h3>
+                                <div className="text-4xl font-black text-amber-500">{unvisitedSchools.length}</div>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-2">Alunos Matriculados</h3>
+                                <div className="text-4xl font-black text-blue-600">{importedStudents.length}</div>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-2">Instrutores</h3>
+                                <div className="text-4xl font-black text-purple-600">{instructors.length}</div>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-2">Visitas Realizadas</h3>
+                                <div className="text-4xl font-black text-emerald-600">{visits.filter(v => v.status === 'visited').length}</div>
+                            </div>
+                        </div>
+                     </div>
+                 )}
+
+                 {view === 'reports' && (
+                     <div className="space-y-6">
+                        <div className="bg-white p-4 rounded-2xl border flex flex-col md:flex-row gap-4 items-center justify-between sticky top-[72px] z-20 shadow-sm">
+                            <div className="relative w-full md:w-auto flex-1 max-w-2xl flex flex-col sm:flex-row gap-3">
+                                <select className="w-full sm:w-1/2 p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500/20" value={selectedSchoolFilter} onChange={e=>setSelectedSchoolFilter(e.target.value)}>
+                                    <option value="">Todos os Polos</option>
+                                    {schools.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                                </select>
+                                <select className="w-full sm:w-1/2 p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500/20" value={selectedShiftFilter} onChange={e=>setSelectedShiftFilter(e.target.value)}>
+                                    <option value="todos">Ambos os Turnos</option>
+                                    <option value="manha">Manhã</option>
+                                    <option value="tarde">Tarde</option>
+                                </select>
+                            </div>
+                            <div className="flex gap-2 w-full md:w-auto">
+                                <button onClick={exportGeneralReport} className="flex-1 md:flex-none bg-emerald-50 text-emerald-600 px-5 py-3 rounded-xl font-bold text-sm flex justify-center items-center gap-2 hover:bg-emerald-100 transition"><Download size={16}/> Exportar</button>
+                                <button onClick={handleShareDashboard} className="flex-1 md:flex-none bg-blue-50 text-blue-600 px-5 py-3 rounded-xl font-bold text-sm flex justify-center items-center gap-2 hover:bg-blue-100 transition"><Share2 size={16}/> Partilhar</button>
+                                <button onClick={() => setSubView(subView === 'stats' ? 'schedule' : 'stats')} className="flex-1 md:flex-none bg-slate-800 text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-slate-700 transition">Ver {subView === 'stats' ? 'Grade' : 'Painel'}</button>
+                            </div>
+                        </div>
+
+                        {subView === 'stats' ? (
+                            <div className="space-y-6 animate-fadeIn">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                                        <p className="text-blue-200 text-xs font-black uppercase tracking-wider mb-1">Matriculados</p>
+                                        <h3 className="text-6xl font-black">{dashboardStats.total}</h3>
+                                        <Users className="absolute -bottom-4 -right-4 opacity-20" size={120}/>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                                        <p className="text-emerald-200 text-xs font-black uppercase tracking-wider mb-1">Frequência Geral</p>
+                                        <h3 className="text-6xl font-black flex items-center gap-2"><Percent size={40}/> {dashboardStats.avgPercentage}%</h3>
+                                        <Medal className="absolute -bottom-4 -right-4 opacity-20" size={120}/>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200">
+                                    <h3 className="font-black text-slate-800 text-xl flex items-center gap-2 mb-6"><LayoutGrid className="text-indigo-500"/> Distribuição por Nível</h3>
+                                    
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                                        {classDistribution.map((c, i) => {
+                                            const colors = [
+                                                { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100' },
+                                                { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100' },
+                                                { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-100' },
+                                                { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100' },
+                                                { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-100' },
+                                                { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100' }
+                                            ];
+                                            const theme = colors[i % colors.length];
+
+                                            return (
+                                                <div key={i} className="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center group cursor-default">
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${theme.bg} ${theme.text} ${theme.border} border group-hover:scale-110 transition-transform duration-300`}>
+                                                        <Users size={20} />
+                                                    </div>
+                                                    <h4 className="font-bold text-slate-700 text-sm mb-1 w-full truncate" title={c.name}>{c.name}</h4>
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-2xl font-black text-slate-800 leading-none">{c.count}</span>
+                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">{c.count === 1 ? 'aluno' : 'alunos'}</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                        {classDistribution.length === 0 && (
+                                            <div className="col-span-full text-slate-400 text-sm font-medium bg-slate-50 px-4 py-8 rounded-2xl w-full text-center border border-dashed border-slate-200">
+                                                Nenhum nível encontrado para o filtro atual.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <h3 className="font-black text-slate-800 text-xl flex items-center gap-2"><TrendingUp className="text-blue-500"/> Evolução Semanal</h3>
+                                        <button onClick={() => setIsHistoryManagerOpen(true)} className="text-xs bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold hover:bg-slate-200 transition">Gerir Histórico</button>
+                                    </div>
+                                    {filteredWeeklyHist.length > 0 ? (
+                                        <div className="h-80 w-full">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart data={filteredWeeklyHist}>
+                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9"/>
+                                                    <XAxis dataKey="weekLabel" axisLine={false} tickLine={false} dy={10} fontSize={12} tick={{fill: '#64748b', fontWeight: 600}}/>
+                                                    <YAxis axisLine={false} tickLine={false} fontSize={12} tick={{fill: '#64748b', fontWeight: 600}}/>
+                                                    <Tooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)'}}/>
+                                                    <Legend wrapperStyle={{paddingTop: '20px'}}/>
+                                                    <Line type="monotone" dataKey="totalMatriculated" name="Matriculados" stroke="#3b82f6" strokeWidth={4} dot={{r: 6, strokeWidth: 0}} activeDot={{r: 8}} />
+                                                    <Line type="monotone" dataKey="totalAttending" name="Frequentes" stroke="#10b981" strokeWidth={4} dot={{r: 6, strokeWidth: 0}} activeDot={{r: 8}} />
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    ) : (
+                                        <div className="h-64 flex flex-col items-center justify-center text-slate-400 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                                            <TrendingUp size={48} className="mb-4 opacity-20"/>
+                                            <p className="font-bold">Nenhum dado guardado.</p>
+                                            <button onClick={saveWeeklySnapshot} className="mt-4 bg-white border border-slate-200 shadow-sm text-slate-700 px-6 py-2 rounded-xl font-bold text-sm">Guardar Semana Atual</button>
+                                        </div>
+                                    )}
+                                    {weeklyHist.length > 0 && <button onClick={saveWeeklySnapshot} className="mt-6 w-full bg-slate-50 border border-slate-200 text-slate-600 py-3 rounded-xl font-bold hover:bg-slate-100 transition">Guardar Fotografia Desta Semana</button>}
+                                </div>
+
+                                <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                                    <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                                        <h3 className="font-black text-slate-800 text-lg flex items-center gap-2"><Users className="text-blue-500"/> Alunos</h3>
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16}/>
+                                            <input className="pl-10 pr-4 py-2 border rounded-xl text-sm outline-none focus:ring-2 ring-blue-500 font-medium" placeholder="Buscar aluno..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="overflow-x-auto max-h-[70vh] custom-scrollbar">
+                                        <table className="w-full text-left text-sm whitespace-nowrap">
+                                            <thead className="bg-white text-slate-500 font-black text-[10px] uppercase tracking-wider sticky top-0 shadow-sm z-10">
+                                                <tr>
+                                                    <th className="p-4 border-b">Polo</th>
+                                                    <th className="p-4 border-b">Nome</th>
+                                                    <th className="p-4 border-b">Turma</th>
+                                                    <th className="p-4 border-b text-center">Frequência</th>
+                                                    <th className="p-4 border-b text-center">Semana Passada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-50">
+                                                {filteredStudentsList.map((s,i) => {
+                                                    const polo = s[findSchoolColumn(s)] || '--';
+                                                    const turma = getStudentClass(s);
+                                                    const stats = getStudentStats(s, i);
+                                                    
+                                                    let badge = 'bg-slate-100 text-slate-500';
+                                                    if(stats.tot>0) { badge = stats.perc>=75 ? 'bg-emerald-100 text-emerald-700' : stats.perc>=50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'; }
+                                                    
+                                                    return (
+                                                        <tr key={i} className="hover:bg-slate-50 transition-colors">
+                                                            <td className="p-4 text-slate-500 text-xs font-bold max-w-[150px] truncate" title={polo}>{polo}</td>
+                                                            <td className="p-4 font-bold text-slate-800">{s.n_pessoa}</td>
+                                                            <td className="p-4 text-slate-600 font-medium">{turma}</td>
+                                                            <td className="p-4 text-center"><span className={`px-3 py-1 rounded-lg text-xs font-black ${badge}`}>{stats.freq} / {stats.tot} ({stats.perc}%)</span></td>
+                                                            <td className="p-4 text-center">
+                                                                {stats.trend > 0 ? (
+                                                                    <span className="text-emerald-500 flex items-center justify-center gap-1 text-xs font-bold"><TrendingUp size={14}/> +{stats.trend}%</span>
+                                                                ) : stats.trend < 0 ? (
+                                                                    <span className="text-red-500 flex items-center justify-center gap-1 text-xs font-bold"><TrendingDown size={14}/> {stats.trend}%</span>
+                                                                ) : (
+                                                                    <span className="text-slate-300 flex items-center justify-center gap-1 text-xs font-bold" title="Manteve ou sem dados"><Minus size={14}/></span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                                {filteredStudentsList.length === 0 && <tr><td colSpan="5" className="text-center p-8 text-slate-400 font-bold">Nenhum aluno encontrado.</td></tr>}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-3xl border shadow-sm overflow-hidden animate-fadeIn">
+                                <div className="grid grid-cols-6 divide-x divide-slate-100 bg-slate-50 border-b">
+                                    <div className="p-4 text-center text-xs font-black uppercase text-slate-400">Hora</div>
+                                    {WEEK_DAYS.map(d=>(<div key={d} className="p-4 text-center text-xs font-black uppercase text-slate-600">{d}</div>))}
+                                </div>
+                                {AUTO_CLASS_SLOTS.map(slot=>(
+                                    <div key={slot.id} className="grid grid-cols-6 divide-x divide-slate-100 border-b last:border-b-0 min-h-[100px]">
+                                        <div className="p-2 flex items-center justify-center bg-slate-50 text-[10px] font-black text-slate-400 text-center">{slot.label}</div>
+                                        {[0,1,2,3,4].map(dIdx=>{
+                                            const cell = autoSchedule[`${dIdx}_${slot.id}`];
+                                            const isNow = isCurrentAutoSlot(dIdx, slot);
+                                            return (
+                                                <div key={dIdx} onClick={()=>handleAutoSlotClickWrapper(dIdx, slot.id)} className={`p-2 flex flex-col items-center justify-center cursor-pointer transition hover:bg-blue-50 ${isNow ? 'bg-emerald-50 ring-inset ring-2 ring-emerald-400' : ''}`}>
+                                                    {cell ? <><span className={`text-[10px] font-black text-center leading-tight ${isNow?'text-emerald-800':'text-blue-800'}`}>{cell.name}</span><span className={`text-[9px] mt-1 font-bold ${isNow?'text-emerald-600':'text-blue-400'}`}>{cell.count} alunos</span></> : <span className="text-[9px] text-slate-300 font-bold">—</span>}
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                     </div>
+                 )}
+
+                 {view === 'schools' && (
+                     <div className="max-w-4xl mx-auto space-y-6">
+                        <div className="bg-white p-8 rounded-3xl border shadow-sm">
+                            <h2 className="text-2xl font-black mb-6 flex items-center gap-2"><School className="text-blue-600"/> Polos Cadastrados</h2>
+                            <form onSubmit={addSchool} className="flex gap-2 mb-8"><input name="n" className="flex-1 p-4 border rounded-xl outline-none focus:ring-2 ring-blue-500 bg-slate-50" placeholder="Nome do novo polo..." required/><button className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-xl font-bold transition"><Plus/></button></form>
+                            <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                                {schools.map(s => (
+                                    <div key={s.id} className="p-4 bg-slate-50 rounded-2xl border flex flex-col gap-3 group transition hover:bg-white hover:shadow-md">
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-bold text-lg text-slate-800">{s.name}</span>
+                                            <button onClick={()=>confirmDelete('school', s.id, s.name)} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><Trash2 size={20}/></button>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Professor 1</label>
+                                                <select className="w-full p-2 border rounded-lg bg-white text-sm outline-none focus:ring-2 ring-blue-500/20" value={s.instructor1Id || ''} onChange={(e) => updateSchool(s.id, { instructor1Id: e.target.value })}><option value="">Selecione...</option>{instructors.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between items-center mb-1"><label className="text-[10px] font-black uppercase text-blue-500">Professor 2 (Dobra)</label>{s.isDouble && <button onClick={() => updateSchool(s.id, { isDouble: false, instructor2Id: null })} className="text-[9px] text-red-500 hover:underline">Remover</button>}</div>
+                                                {s.isDouble ? (
+                                                    <select className="w-full p-2 border border-blue-200 rounded-lg bg-blue-50 text-sm outline-none focus:ring-2 ring-blue-500/20" value={s.instructor2Id || ''} onChange={(e) => updateSchool(s.id, { instructor2Id: e.target.value })}><option value="">Selecione...</option>{instructors.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
+                                                ) : (
+                                                    <button onClick={() => updateSchool(s.id, { isDouble: true })} className="w-full p-2 border border-dashed border-slate-300 rounded-lg text-slate-500 text-sm hover:bg-slate-50 transition flex items-center justify-center gap-1"><Plus size={14}/> Adicionar</button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                {schools.length === 0 && <p className="text-center text-slate-400 py-8">Nenhum polo cadastrado.</p>}
+                            </div>
+                        </div>
+                     </div>
+                 )}
+
+                 {view === 'team' && (
+                     <div className="max-w-4xl mx-auto bg-white p-8 rounded-3xl border shadow-sm">
+                         <div className="flex justify-between items-center mb-6">
+                             <h2 className="text-2xl font-black flex items-center gap-2"><Users className="text-blue-600"/> Equipe Pedagógica</h2>
+                             <button onClick={loadDefaultInstructors} className="text-xs bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold hover:bg-slate-200 transition">Importar Padrão</button>
+                         </div>
+                         <form onSubmit={addInstructor} className="flex gap-2 mb-8"><input name="n" className="flex-1 p-4 border rounded-xl outline-none focus:ring-2 ring-blue-500 bg-slate-50" placeholder="Nome do professor..." required/><button className="bg-blue-600 text-white px-8 rounded-xl font-bold"><Plus/></button></form>
+                         <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                             {instructorStats.map(inst => (
+                                 <div key={inst.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 bg-slate-50 rounded-2xl border hover:bg-white hover:shadow-md transition">
+                                     <div>
+                                         <span className="font-bold text-slate-800 block">{inst.name}</span>
+                                         <div className="flex items-center gap-2 mt-1">
+                                             <span className={`text-[10px] px-2 py-0.5 rounded-md font-black uppercase ${inst.average >= 9 ? 'bg-emerald-100 text-emerald-700' : inst.average >= 7 ? 'bg-blue-100 text-blue-700' : inst.average > 0 ? 'bg-red-100 text-red-700' : 'bg-slate-200 text-slate-500'}`}>Média: {inst.average > 0 ? inst.average.toFixed(1) : '-'}</span>
+                                             <span className="text-xs text-slate-400 font-medium">{inst.count} avaliações</span>
+                                         </div>
+                                     </div>
+                                     <div className="flex items-center gap-2">
+                                         <button onClick={() => openEvalModal(inst.id)} className="flex-1 sm:flex-none text-xs bg-blue-50 text-blue-600 px-4 py-2 rounded-xl font-bold hover:bg-blue-100 transition flex items-center justify-center gap-1"><ClipboardCheck size={14}/> Avaliar</button>
+                                         <button onClick={() => openHistoryModal(inst.id)} className="flex-1 sm:flex-none text-xs bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-bold hover:bg-slate-300 transition flex items-center justify-center gap-1"><History size={14}/> Histórico</button>
+                                         <button onClick={() => confirmDelete('instructor', inst.id, inst.name)} className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition"><Trash2 size={18}/></button>
+                                     </div>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
+                 )}
+
+                 {view === 'calendar' && (
+                     <div className="space-y-6">
+                        <div className="bg-white p-6 rounded-3xl border shadow-sm mb-6">
+                          <h3 className="font-black text-slate-800 mb-4 flex items-center gap-2"><AlertOctagon className="text-amber-500"/> Polos Pendentes no Mês ({unvisitedSchools.length})</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {unvisitedSchools.map((s, i) => (<span key={i} className="text-xs font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">{s.name}</span>))}
+                            {unvisitedSchools.length === 0 && <span className="text-sm text-emerald-500 font-bold bg-emerald-50 px-4 py-2 rounded-xl">Todos os polos atendidos! 🎉</span>}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-4 text-xs font-bold bg-white p-4 rounded-2xl border">
+                            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-emerald-500"></div> Realizada</span>
+                            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-amber-400"></div> Falta / Pendente</span>
+                            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-orange-500"></div> Feriado</span>
+                            <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-red-500"></div> Ausência Professor</span>
+                        </div>
+
+                        {weeks.map((week, wIdx) => (
+                            <div key={wIdx} className="bg-white rounded-3xl border shadow-sm overflow-hidden mb-6">
+                                <div className="bg-slate-50 px-6 py-3 border-b font-black text-slate-400 text-xs uppercase tracking-wider">Semana {wIdx+1}</div>
+                                <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x border-slate-100">
+                                    {week.map((day, dIdx) => (
+                                        <div key={dIdx} className="min-h-[200px] p-4">
+                                            <div className="text-center mb-4"><span className="block text-[10px] font-black text-slate-400 uppercase">{DAYS_OF_WEEK[day.getDay()-1]}</span><span className="block text-2xl font-black text-slate-800">{day.getDate()}</span></div>
+                                            <div className="space-y-2">{SLOTS.map(slot=><SlotCard key={slot.id} date={day} slot={slot} visits={visits} schools={schools} onOpenModal={openModal}/>)}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                     </div>
+                 )}
+
+                 {view === 'notes' && (
+                     <div className="space-y-6">
+                        <div className="flex justify-between items-center"><h2 className="text-2xl font-black flex gap-2 items-center text-slate-800"><Notebook className="text-blue-500"/> Anotações Gerais</h2><button onClick={openAddNoteModal} className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition active:scale-95 shadow-md"><Plus size={18}/> Nova Nota</button></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {notes.map(n=>(
+                                <div key={n.id} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm relative group flex flex-col h-full">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className={`text-[9px] px-3 py-1.5 rounded-lg font-black uppercase tracking-wider ${NOTE_CATEGORIES.find(c=>c.id===n.category)?.color || 'bg-slate-100 text-slate-600'}`}>{NOTE_CATEGORIES.find(c=>c.id===n.category)?.label || 'Geral'}</span>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleNoteToGoogleCalendar(n.title, n.content)} className="text-slate-400 hover:text-blue-500 bg-slate-50 hover:bg-blue-50 p-1.5 rounded-lg transition" title="Adicionar ao Google Agenda"><CalendarPlus size={16}/></button>
+                                            <button onClick={()=>confirmDelete('note', n.id, n.title)} className="text-slate-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100 bg-slate-50 hover:bg-red-50 p-1.5 rounded-lg"><Trash2 size={16}/></button>
+                                        </div>
+                                    </div>
+                                    <h4 className="font-bold text-slate-800 text-lg mb-2">{n.title}</h4>
+                                    <p className="text-sm text-slate-500 leading-relaxed mb-6 whitespace-pre-wrap flex-1">{n.content}</p>
+                                    <div className="pt-4 border-t border-slate-100 text-[10px] text-slate-400 font-bold flex items-center gap-1"><Calendar size={12}/> {new Date(n.createdAt).toLocaleDateString('pt-BR')}</div>
+                                </div>
+                            ))}
+                            {notes.length === 0 && <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-dashed"><StickyNote size={48} className="mx-auto text-slate-300 mb-4"/><p className="text-slate-500 font-bold">Nenhuma anotação criada.</p></div>}
+                        </div>
+                     </div>
+                 )}
+
+                 {view === 'import' && (
+                     <div className="space-y-6">
+                         <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-200 max-w-2xl mx-auto text-center">
+                             <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6"><Upload size={40}/></div>
+                             <h2 className="text-2xl font-black mb-3 text-slate-800">Importar Arquivo</h2>
+                             <p className="text-slate-500 mb-8 font-medium">Faça o upload do Excel ou CSV com os dados da secretaria.</p>
+                             
+                             <div className="bg-blue-50 border border-blue-100 p-5 rounded-2xl text-sm text-blue-800 text-left mb-8 shadow-inner">
+                                 <p className="font-black flex items-center gap-2 mb-2"><Info size={18}/> Detalhe Importante:</p>
+                                 <p className="leading-relaxed">O sistema puxa apenas alunos das escolas listadas na aba <strong>"Escolas"</strong>. Cadastre todos os polos antes de importar.</p>
+                             </div>
+
+                             <label className="cursor-pointer w-full bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex justify-center items-center gap-3 active:scale-95">
+                                 <FileSpreadsheet size={24}/> Escolher Arquivo
+                                 <input type="file" accept=".csv, .xlsx, .xls" className="hidden" onChange={handleFileUpload} ref={fileInputRef}/>
+                             </label>
+
+                             <div className="mt-10 pt-8 border-t border-slate-100 text-left">
+                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Ou cole texto CSV manualmente:</p>
+                                 <textarea className="w-full h-32 p-4 border border-slate-200 rounded-2xl text-xs font-mono bg-slate-50 focus:ring-2 ring-blue-500 outline-none mb-3 resize-none custom-scrollbar" placeholder={`n_polo\tid_pessoa\tn_pessoa\nDorival\t123\tJoão Silva`} value={rawCsvData} onChange={(e) => setRawCsvData(e.target.value)} />
+                                 <button onClick={processCSVText} className="w-full text-sm font-bold text-slate-600 bg-slate-100 py-3 rounded-xl hover:bg-slate-200 transition">Processar Texto</button>
+                             </div>
+                         </div>
+                     </div>
+                 )}
+               </main>
+
+               {/* NAVEGAÇÃO MOBILE */}
+               <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t z-40 pb-safe shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+                   <div className="flex overflow-x-auto px-2 py-2 gap-1 custom-scrollbar snap-x">
+                       {[
+                           { id: 'home', icon: <Home size={22}/>, label: 'Início' }, 
+                           { id: 'reports', icon: <BarChart2 size={22}/>, label: 'Painéis' },
+                           { id: 'calendar', icon: <Calendar size={22}/>, label: 'Agenda' }, 
+                           { id: 'team', icon: <Users size={22}/>, label: 'Equipe' }, 
+                           { id: 'schools', icon: <School size={22}/>, label: 'Polos' },
+                           { id: 'notes', icon: <Notebook size={22}/>, label: 'Notas' },
+                           { id: 'import', icon: <Upload size={22}/>, label: 'Importar' }
+                       ].map(item => (
+                           <button 
+                               key={item.id} 
+                               onClick={()=>setView(item.id)} 
+                               className={`flex flex-col items-center justify-center min-w-[72px] p-2 rounded-2xl transition-all snap-center ${
+                                   view === item.id 
+                                   ? 'text-blue-600 bg-blue-50 shadow-sm scale-105' 
+                                   : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                               }`}
+                           >
+                               {item.icon}
+                               <span className={`text-[10px] font-bold mt-1.5 tracking-tight ${view === item.id ? 'text-blue-700' : 'text-slate-500'}`}>
+                                   {item.label}
+                               </span>
+                           </button>
+                       ))}
+                   </div>
+               </nav>
+
+               {/* MODAIS */}
+
+               {/* Modal Gestão Histórico Semanal */}
+               {isHistoryManagerOpen && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl p-8 animate-slideUp sm:animate-scaleUp relative max-h-[85vh] overflow-y-auto custom-scrollbar">
+                           <button onClick={() => setIsHistoryManagerOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><X/></button>
+                           <h2 className="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><History className="text-blue-500"/> Gerir Histórico Semanal</h2>
+                           <div className="space-y-3">
+                               {weeklyHist.length > 0 ? weeklyHist.map(hist => (
+                                   <div key={hist.id} className="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                       <div>
+                                           <div className="font-bold text-slate-700">Semana: {hist.weekLabel}</div>
+                                           <div className="text-xs text-slate-500 font-medium">Total de alunos: {hist.totalMatriculated} | Presenças: {hist.totalAttending}</div>
+                                       </div>
+                                       <button onClick={() => confirmDelete('history', hist.id, 'Semana ' + hist.weekLabel)} className="p-3 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition">
+                                           <Trash2 size={18}/>
+                                       </button>
+                                   </div>
+                               )) : <p className="text-center text-slate-400 py-8 font-medium">Nenhum histórico salvo ainda.</p>}
+                           </div>
+                       </div>
+                   </div>
+               )}
+
+               {isModalOpen && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-8 animate-slideUp sm:animate-scaleUp">
+                           <div className="flex justify-between items-center mb-6">
+                               <h2 className="text-2xl font-black text-slate-800">Agendar</h2>
+                               <div className="flex gap-2">
+                                   <button onClick={handleAddToGoogleCalendar} title="Adicionar ao Google Agenda" className="text-blue-500 hover:text-blue-700 bg-blue-50 p-2 rounded-full transition shadow-sm"><CalendarPlus size={20}/></button>
+                                   <button onClick={()=>setIsModalOpen(false)} className="text-slate-400 hover:text-slate-800 bg-slate-100 p-2 rounded-full transition"><X size={20}/></button>
+                               </div>
+                           </div>
+                           <div className="space-y-5">
+                               <div className="bg-blue-50 p-4 rounded-2xl text-sm font-bold text-blue-800 flex items-center gap-3"><Calendar/> {selectedSlot.dateObj.toLocaleDateString()} • {SLOTS.find(s=>s.id===selectedSlot.slotId).label}</div>
+                               <div className="flex gap-2 bg-slate-100 p-1.5 rounded-xl">
+                                   <button onClick={()=>setEditData({...editData, isHoliday: true, isAbsence: false})} className={`flex-1 py-3 rounded-lg text-xs font-black uppercase transition ${editData.isHoliday?'bg-white shadow text-orange-600':'text-slate-400'}`}>Feriado</button>
+                                   <button onClick={()=>setEditData({...editData, isAbsence: true, isHoliday: false})} className={`flex-1 py-3 rounded-lg text-xs font-black uppercase transition ${editData.isAbsence?'bg-white shadow text-red-600':'text-slate-400'}`}>Ausência</button>
+                                   <button onClick={()=>setEditData({...editData, isHoliday: false, isAbsence: false})} className={`flex-1 py-3 rounded-lg text-xs font-black uppercase transition ${!editData.isHoliday && !editData.isAbsence?'bg-white shadow text-blue-600':'text-slate-400'}`}>Visita</button>
+                               </div>
+                               {!editData.isHoliday && !editData.isAbsence && (
+                                   <select className="w-full p-4 border border-slate-200 rounded-xl bg-slate-50 font-bold outline-none focus:ring-2 ring-blue-500/20" value={editData.schoolId} onChange={e=>setEditData({...editData,schoolId:e.target.value})}>
+                                       <option value="">Selecione Polo...</option>
+                                       {schools.map(s=>(<option key={s.id} value={s.id}>{s.name}</option>))}
+                                   </select>
+                               )}
+                               <textarea className="w-full p-4 border border-slate-200 rounded-xl bg-slate-50 h-32 resize-none outline-none focus:ring-2 ring-blue-500/20" placeholder="Observações..." value={editData.notes} onChange={e=>setEditData({...editData,notes:e.target.value})}/>
+                               
+                               {!editData.isHoliday && !editData.isAbsence && (
+                                   <div className="flex gap-3 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                                       <label className={`flex-1 flex gap-2 items-center justify-center p-3 rounded-lg cursor-pointer transition-all ${editData.status==='visited' ? 'bg-white shadow-sm text-emerald-600 font-bold ring-1 ring-emerald-500/20' : 'text-slate-500 hover:text-slate-700 font-medium'}`}>
+                                           <input type="radio" className="hidden" checked={editData.status==='visited'} onChange={()=>setEditData({...editData,status:'visited'})}/> <CheckCircle size={18}/> Confirmada
+                                       </label>
+                                       <label className={`flex-1 flex gap-2 items-center justify-center p-3 rounded-lg cursor-pointer transition-all ${editData.status==='missed' ? 'bg-white shadow-sm text-amber-600 font-bold ring-1 ring-amber-500/20' : 'text-slate-500 hover:text-slate-700 font-medium'}`}>
+                                           <input type="radio" className="hidden" checked={editData.status==='missed'} onChange={()=>setEditData({...editData,status:'missed'})}/> <AlertTriangle size={18}/> Faltou
+                                       </label>
+                                   </div>
+                               )}
+
+                               <div className="flex gap-3 pt-4 pb-safe">
+                                   <button onClick={()=>setIsModalOpen(false)} className="flex-1 py-4 font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition">Cancelar</button>
+                                   <button onClick={saveVisit} className="flex-1 py-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 active:scale-95 transition">Confirmar</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               )}
+
+               {isNoteModalOpen && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-8 animate-slideUp sm:animate-scaleUp">
+                           <div className="flex justify-between items-center mb-6">
+                               <h2 className="text-2xl font-black text-slate-800">Nova Nota</h2>
+                               <button onClick={()=>setIsNoteModalOpen(false)} className="text-slate-400 hover:text-slate-800 bg-slate-100 p-2 rounded-full transition"><X size={20}/></button>
+                           </div>
+                           <div className="space-y-5">
+                               <input className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 ring-blue-500/20 font-bold text-lg" placeholder="Título..." value={noteData.title} onChange={e=>setNoteData({...noteData,title:e.target.value})}/>
+                               <div className="flex gap-2 flex-wrap">
+                                   {NOTE_CATEGORIES.map(c=>(<button key={c.id} onClick={()=>setNoteData({...noteData,category:c.id})} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border transition ${noteData.category===c.id?c.color+' border-transparent shadow-sm ring-2 ring-offset-1 ring-blue-200':'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>{c.label}</button>))}
+                               </div>
+                               <textarea className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl h-40 resize-none outline-none focus:ring-2 ring-blue-500/20" placeholder="Conteúdo da nota..." value={noteData.content} onChange={e=>setNoteData({...noteData,content:e.target.value})}/>
+                               <div className="flex gap-2 sm:gap-3 pt-4 pb-safe flex-wrap sm:flex-nowrap">
+                                   <button onClick={()=>setIsNoteModalOpen(false)} className="w-full sm:flex-1 py-3.5 font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition order-3 sm:order-1 text-sm">Cancelar</button>
+                                   <button onClick={() => { saveNote(); handleNoteToGoogleCalendar(noteData.title, noteData.content); }} className="w-full sm:flex-1 py-3.5 font-bold text-indigo-600 bg-indigo-50 rounded-xl hover:bg-indigo-100 transition flex items-center justify-center gap-2 order-2 text-sm"><CalendarPlus size={16}/> Salvar & Agendar</button>
+                                   <button onClick={saveNote} className="w-full sm:flex-1 py-3.5 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition active:scale-95 order-1 sm:order-3 text-sm">Guardar Nota</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               )}
+
+               {/* Modal Avaliação de Instrutor */}
+                {isEvalModalOpen && (
+                   <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl p-8 animate-slideUp sm:animate-scaleUp relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+                           <button onClick={()=>setIsEvalModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><X/></button>
+                           <h2 className="text-2xl font-black text-slate-800 mb-2">Avaliação de Desempenho</h2>
+                           <p className="text-sm text-slate-500 mb-6 font-medium">Instrutor: {instructors.find(i => i.id === evalData.instructorId)?.name}</p>
+                           <div className="space-y-6">
+                               {EVALUATION_CRITERIA.map(crit => (
+                                   <div key={crit.id} className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                                       <div className="flex justify-between items-center mb-3">
+                                           <label className="font-bold text-slate-700 text-sm uppercase tracking-wide">{crit.label}</label>
+                                           <div className="flex items-center gap-3">
+                                               <div className="flex items-center gap-2">
+                                                    <span className="text-xs text-slate-400 font-bold uppercase">Nota:</span>
+                                                    <input type="number" min="1" max="10" className="w-16 p-2 border border-slate-200 rounded-xl text-center font-black text-blue-600 focus:ring-2 focus:ring-blue-500/20 outline-none" value={evalData.scores[crit.id] || ''} onChange={e => setEvalData({...evalData, scores: {...evalData.scores, [crit.id]: parseInt(e.target.value)}})}/>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       <textarea className="w-full p-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 outline-none bg-white placeholder-slate-400 resize-none" placeholder="Observações e feedbacks..." rows="2" value={evalData.comments[crit.id] || ''} onChange={e => setEvalData({...evalData, comments: {...evalData.comments, [crit.id]: e.target.value}})}/>
+                                   </div>
+                               ))}
+                           </div>
+                           <div className="sticky bottom-0 bg-white/90 backdrop-blur pt-6 mt-6 border-t border-slate-100 flex justify-end gap-3 pb-safe">
+                               <button onClick={()=>setIsEvalModalOpen(false)} className="px-6 py-3.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">Cancelar</button>
+                               <button onClick={saveEvaluation} className="px-6 py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition transform active:scale-95">Salvar Avaliação</button>
+                           </div>
+                       </div>
+                   </div>
+                )}
+
+                {/* Modal Histórico do Instrutor */}
+                {isHistoryModalOpen && (
+                   <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl p-8 animate-slideUp sm:animate-scaleUp relative max-h-[85vh] overflow-y-auto custom-scrollbar">
+                           <button onClick={()=>setIsHistoryModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><X/></button>
+                           <div className="flex items-center gap-3 mb-6">
+                               <div className="bg-purple-100 text-purple-600 p-3 rounded-2xl"><History size={24}/></div>
+                               <div>
+                                   <h2 className="text-2xl font-black text-slate-800">Histórico de Avaliações</h2>
+                                   <p className="text-sm text-slate-500 font-medium">Instrutor: {historyData.instructorName}</p>
+                               </div>
+                           </div>
+                           <div className="space-y-4 pb-safe">
+                               {historyData.evaluations.length > 0 ? (
+                                   historyData.evaluations.map(ev => (
+                                       <div key={ev.id} className="border border-slate-200 p-5 rounded-2xl hover:bg-slate-50 transition-all group">
+                                           <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                                               <span className="font-bold text-slate-700 flex items-center gap-2"><Calendar size={16} className="text-blue-500"/> {new Date(ev.date).toLocaleDateString('pt-BR')}</span>
+                                               <span className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wide ${ev.average >= 9 ? 'bg-green-100 text-green-700' : ev.average >= 7 ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>Média: {ev.average.toFixed(1)}</span>
+                                           </div>
+                                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                               {Object.entries(ev.scores).map(([k, v]) => (
+                                                   <div key={k} className="flex justify-between p-2 bg-white rounded-lg border border-slate-100">
+                                                       <span className="text-slate-500 font-medium">{EVALUATION_CRITERIA.find(c=>c.id===k)?.label}:</span>
+                                                       <span className="font-bold text-slate-800">{v}</span>
+                                                   </div>
+                                               ))}
+                                           </div>
+                                       </div>
+                                   ))
+                               ) : (
+                                   <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50">
+                                       <ClipboardCheck size={48} className="mx-auto mb-3 text-slate-300"/>
+                                       <p className="text-slate-500 font-medium">Nenhuma avaliação encontrada.</p>
+                                   </div>
+                               )}
+                           </div>
+                       </div>
+                   </div>
+                )}
+
+               {vacantModalOpen && selectedVacantSlot && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 animate-scaleUp overflow-hidden">
+                           <div className="flex justify-between items-center mb-6">
+                               <div><h3 className="text-xl font-black text-slate-800">Polos Vagos</h3><p className="text-sm font-bold text-emerald-600">{selectedVacantSlot.label}</p></div>
+                               <button onClick={()=>setVacantModalOpen(false)} className="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><X/></button>
+                           </div>
+                           <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                               {selectedVacantSlot.freeSchools.map((s,i)=>(
+                                   <div key={i} className="p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 flex items-center justify-between border border-slate-100">
+                                       <span>{s.name}</span><div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                                   </div>
+                               ))}
+                               {selectedVacantSlot.freeSchools.length === 0 && <p className="text-center text-slate-400 py-8 font-bold">Nenhum polo vago encontrado.</p>}
+                           </div>
+                           <button onClick={()=>setVacantModalOpen(false)} className="w-full mt-8 py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition pb-safe">Fechar</button>
+                       </div>
+                   </div>
+               )}
+
+                {/* MODAL DE VISUALIZAÇÃO DE TURMA AUTOMÁTICA */}
+                {scheduleStudentListOpen && selectedClassForList && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg p-0 animate-slideUp sm:animate-scaleUp flex flex-col overflow-hidden max-h-[90vh]">
+                           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 md:p-8 text-white shrink-0 relative">
+                               <div className="flex justify-between items-start mb-2">
+                                   <h3 className="text-2xl font-black relative z-10 pr-8">{selectedClassForList.name}</h3>
+                                   <button onClick={()=>setScheduleStudentListOpen(false)} className="p-2 bg-white/20 rounded-full hover:bg-white/30 text-white transition absolute top-6 right-6 z-20"><X size={20}/></button>
+                               </div>
+                               <p className="text-blue-100 text-sm font-medium flex items-center gap-2 relative z-10"><Users size={16}/> {selectedClassForList.students.length} alunos matriculados</p>
+                           </div>
+                           <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-2 bg-slate-50 custom-scrollbar pb-safe">
+                               {selectedClassForList.students.map((s, idx) => {
+                                   const sId = sanitizeId(s.id_pessoa || s.n_pessoa || `aluno-${idx}`);
+                                   const stats = getStudentStats(s, idx);
+                                   
+                                   let badge = 'bg-slate-200 text-slate-600';
+                                   let borderAlert = 'border-slate-200';
+                                   let bgAlert = 'bg-white';
+                                   
+                                   if (stats.cons >= 3) {
+                                       badge = 'bg-red-100 text-red-700 border border-red-200 animate-pulse';
+                                       borderAlert = 'border-red-300';
+                                       bgAlert = 'bg-red-50';
+                                   } else if (stats.tot > 0) { 
+                                       badge = stats.perc >= 75 ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : stats.perc >= 50 ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-red-100 text-red-700 border border-red-200'; 
+                                   }
+
+                                   return (
+                                       <div key={sId} className={`p-4 rounded-2xl border flex items-center justify-between ${bgAlert} ${borderAlert}`}>
+                                           <div className="flex items-center gap-3">
+                                               <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm bg-slate-100 text-slate-500">{s.n_pessoa ? s.n_pessoa.charAt(0) : '?'}</div>
+                                               <div>
+                                                   <span className="font-bold block text-slate-800">{s.n_pessoa || 'Desconhecido'}</span>
+                                                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md mt-1 inline-block ${badge}`}>Freq: {stats.perc}% {stats.cons >= 3 ? ' • Risco!' : ''}</span>
+                                               </div>
+                                           </div>
+                                           <div className="text-right">
+                                               <span className="block text-xs font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">{stats.freq} / {stats.tot}</span>
+                                           </div>
+                                       </div>
+                                   )
+                               })}
+                           </div>
+                           <div className="p-4 bg-white border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
+                               Dados extraídos automaticamente da planilha base • {new Date().toLocaleDateString('pt-BR')}
+                           </div>
+                       </div>
+                   </div>
+                )}
+
+               {deleteModal.isOpen && (
+                   <div className="fixed inset-0 z-max flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-md bg-black/60">
+                       <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-sm p-8 text-center animate-slideUp sm:animate-scaleUp pb-safe">
+                           <div className="mx-auto w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6 shadow-inner"><Trash2 size={32}/></div>
+                           <h3 className="text-2xl font-black text-slate-800 mb-2">Confirmar Exclusão?</h3>
+                           <p className="text-slate-500 text-sm mb-8 leading-relaxed">Tem a certeza que deseja apagar <strong>"{deleteModal.title}"</strong> da base de dados? Esta ação não pode ser desfeita.</p>
+                           <div className="flex gap-3">
+                               <button onClick={()=>setDeleteModal({isOpen:false})} className="flex-1 py-4 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">Voltar</button>
+                               <button onClick={executeDelete} className="flex-1 py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold shadow-lg shadow-red-500/30 transition active:scale-95">Apagar</button>
+                           </div>
+                       </div>
+                   </div>
+               )}
+
+               {importAlert && (
+                    <div className="fixed inset-0 z-max flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+                        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 relative animate-scaleUp">
+                            <h3 className="text-xl font-black text-red-600 mb-4 flex items-center gap-2"><AlertTriangle/> {importAlert.title}</h3>
+                            <div className="text-sm text-slate-700 whitespace-pre-wrap bg-red-50 p-6 rounded-2xl border border-red-100 font-medium leading-relaxed">
+                                {importAlert.message}
+                            </div>
+                            <button onClick={() => setImportAlert(null)} className="mt-8 w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-xl font-bold transition active:scale-95 shadow-lg">Entendido</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<ErrorBoundary><App /></ErrorBoundary>);
+    </script>
+</body>
+</html>
