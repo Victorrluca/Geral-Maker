@@ -1074,13 +1074,13 @@
              showToast("Evolução semanal detalhada guardada!");
           };
 
-          // NOVA FUNÇÃO DE EXPORTAÇÃO
+          // NOVA FUNÇÃO DE EXPORTAÇÃO (AGORA EM PDF)
           const exportGeneralReport = () => {
               if (schoolRankings.full.length === 0) return showToast("Nenhum dado para exportar.");
 
               const lastWeek = weeklyHist.length > 0 ? weeklyHist[0] : null;
 
-              const exportData = schoolRankings.full.map(polo => {
+              const tableData = schoolRankings.full.map(polo => {
                   let pastPerc = "Sem dados";
                   
                   if (lastWeek && lastWeek.breakdown && lastWeek.breakdown[polo.name]) {
@@ -1092,25 +1092,54 @@
 
                   const evol = pastPerc !== "Sem dados" ? (polo.percentage - pastPerc) + "%" : "-";
 
-                  return {
-                      "Polo": polo.name,
-                      "Frequência Passada (%)": pastPerc !== "Sem dados" ? pastPerc + "%" : pastPerc,
-                      "Frequência Nova (%)": polo.percentage + "%",
-                      "Evolução": evol
-                  };
+                  return [
+                      polo.name,
+                      pastPerc !== "Sem dados" ? pastPerc + "%" : pastPerc,
+                      polo.percentage + "%",
+                      evol
+                  ];
               });
 
-              const csv = Papa.unparse(exportData);
-              const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' }); // Adiciona BOM para caracteres especiais
-              const link = document.createElement("a");
-              const url = URL.createObjectURL(blob);
-              link.setAttribute("href", url);
-              link.setAttribute("download", `Relatorio_Frequencia_${formatDateLocal(new Date())}.csv`);
-              link.style.visibility = 'hidden';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              showToast("Relatório exportado com sucesso!");
+              // Criação do Documento PDF
+              const doc = new jsPDF();
+              
+              // Cabeçalho do PDF
+              doc.setFontSize(18);
+              doc.setTextColor(30, 41, 59); // slate-800
+              doc.text("Relatório de Frequência - Polos", 14, 22);
+              
+              doc.setFontSize(10);
+              doc.setTextColor(100, 116, 139); // slate-500
+              doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`, 14, 30);
+
+              // Tabela com autoTable
+              autoTable(doc, {
+                  startY: 38,
+                  head: [['Polo', 'Frequência Passada', 'Frequência Nova', 'Evolução']],
+                  body: tableData,
+                  theme: 'grid',
+                  headStyles: { 
+                      fillColor: [59, 130, 246], // azul do sistema
+                      textColor: 255,
+                      fontStyle: 'bold'
+                  },
+                  styles: { 
+                      font: 'helvetica', 
+                      fontSize: 10,
+                      cellPadding: 5
+                  },
+                  alternateRowStyles: { 
+                      fillColor: [248, 250, 252] // cinza muito claro alternado
+                  },
+                  columnStyles: {
+                      1: { halign: 'center' },
+                      2: { halign: 'center' },
+                      3: { halign: 'center' }
+                  }
+              });
+
+              doc.save(`Relatorio_Frequencia_${formatDateLocal(new Date())}.pdf`);
+              showToast("Relatório PDF exportado com sucesso!");
           };
 
           const openEvalModal = (instructorId) => { setEvalData({ instructorId, scores: {}, comments: {} }); setIsEvalModalOpen(true); };
