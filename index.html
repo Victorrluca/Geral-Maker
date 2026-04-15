@@ -48,7 +48,9 @@
         "recharts": "https://esm.sh/recharts@2.12.0?external=react,react-dom,prop-types&dev",
         "lucide-react": "https://esm.sh/lucide-react@0.330.0?external=react&dev",
         "papaparse": "https://esm.sh/papaparse@5.4.1?dev",
-        "read-excel-file": "https://esm.sh/read-excel-file@5.6.1?dev"
+        "read-excel-file": "https://esm.sh/read-excel-file@5.6.1?dev",
+        "jspdf": "https://esm.sh/jspdf@2.5.1?dev",
+        "jspdf-autotable": "https://esm.sh/jspdf-autotable@3.8.1?external=jspdf&dev"
       }
     }
     </script>
@@ -130,6 +132,8 @@
         } from 'lucide-react';
         import Papa from 'papaparse';
         import readXlsxFile from 'read-excel-file';
+        import { jsPDF } from 'jspdf';
+        import autoTable from 'jspdf-autotable';
 
         // --- INICIALIZAÇÃO FIREBASE ---
         const firebaseConfig = {
@@ -591,6 +595,26 @@
               return () => window.removeEventListener('hashchange', handleHashChange);
           }, []);
 
+          const getHolidayCountForClass = (classCodeRaw) => {
+              let holidayCount = 0;
+              const parsed = parseClassCode(classCodeRaw);
+              if (parsed) {
+                  const classDow = parsed.day - 1; 
+                  visits.forEach(v => {
+                      if (v.status === 'holiday') {
+                          const [y, m, d] = v.date.split('-');
+                          const vDate = new Date(y, m - 1, d);
+                          if (vDate.getDay() === classDow) {
+                              const isM = parsed.period === 'M';
+                              if (isM && (v.slot === 1 || v.slot === 2)) holidayCount++;
+                              if (!isM && (v.slot === 3 || v.slot === 4)) holidayCount++;
+                          }
+                      }
+                  });
+              }
+              return holidayCount;
+          };
+
           const classMaxTotals = useMemo(() => {
               const maxes = {};
               importedStudents.forEach(s => {
@@ -656,7 +680,6 @@
                   perc = data.freqRaw > 100 ? 100 : data.freqRaw;
               }
 
-              // Tendência (Frequência da semana passada)
               const pastPerc = (weeklyHist.length > 0 && weeklyHist[0].studentData && weeklyHist[0].studentData[sId] !== undefined) 
                                ? weeklyHist[0].studentData[sId] 
                                : perc; 
@@ -1074,7 +1097,6 @@
              showToast("Evolução semanal detalhada guardada!");
           };
 
-          // NOVA FUNÇÃO DE EXPORTAÇÃO (AGORA EM PDF)
           const exportGeneralReport = () => {
               if (schoolRankings.full.length === 0) return showToast("Nenhum dado para exportar.");
 
@@ -1100,26 +1122,23 @@
                   ];
               });
 
-              // Criação do Documento PDF
               const doc = new jsPDF();
               
-              // Cabeçalho do PDF
               doc.setFontSize(18);
-              doc.setTextColor(30, 41, 59); // slate-800
+              doc.setTextColor(30, 41, 59);
               doc.text("Relatório de Frequência - Polos", 14, 22);
               
               doc.setFontSize(10);
-              doc.setTextColor(100, 116, 139); // slate-500
+              doc.setTextColor(100, 116, 139);
               doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`, 14, 30);
 
-              // Tabela com autoTable
               autoTable(doc, {
                   startY: 38,
                   head: [['Polo', 'Frequência Passada', 'Frequência Nova', 'Evolução']],
                   body: tableData,
                   theme: 'grid',
                   headStyles: { 
-                      fillColor: [59, 130, 246], // azul do sistema
+                      fillColor: [59, 130, 246], 
                       textColor: 255,
                       fontStyle: 'bold'
                   },
@@ -1129,7 +1148,7 @@
                       cellPadding: 5
                   },
                   alternateRowStyles: { 
-                      fillColor: [248, 250, 252] // cinza muito claro alternado
+                      fillColor: [248, 250, 252] 
                   },
                   columnStyles: {
                       1: { halign: 'center' },
